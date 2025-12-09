@@ -46,4 +46,20 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         fields = ['site_name', 'primary_color', 'secondary_color', 'accent_color', 
                   'background_color', 'background_image', 'hero_title', 'hero_subtitle',
                   'about_content', 'contact_email', 'contact_phone', 'address']
-
+        extra_kwargs = {
+            'background_image': {'required': False, 'allow_null': True}
+        }
+    
+    def validate(self, data):
+        """Custom validation for settings"""
+        # Allow partial updates
+        return data
+    
+    def update(self, instance, validated_data):
+        """Handle update with proper field handling"""
+        # Remove background_image if it's None or empty string
+        if 'background_image' in validated_data:
+            if validated_data['background_image'] is None or validated_data['background_image'] == '':
+                validated_data.pop('background_image', None)
+        
+        return super().update(instance, validated_data)

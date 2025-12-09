@@ -59,7 +59,23 @@ export const SettingsProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       console.error('Error updating settings:', error);
-      return { success: false, error: error.message };
+      let errorMessage = 'Unknown error occurred';
+      
+      if (error.response) {
+        // Server responded with error status
+        errorMessage = error.response.data?.detail || 
+                      error.response.data?.message || 
+                      JSON.stringify(error.response.data) ||
+                      `Server error: ${error.response.status}`;
+      } else if (error.request) {
+        // Request was made but no response received
+        errorMessage = 'No response from server. Is the backend running?';
+      } else {
+        // Error in setting up the request
+        errorMessage = error.message || 'Error setting up request';
+      }
+      
+      return { success: false, error: errorMessage };
     }
   };
 

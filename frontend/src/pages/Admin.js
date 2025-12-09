@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSettings } from '../contexts/SettingsContext';
 import api from '../config/api';
@@ -8,6 +8,7 @@ import './Admin.css';
 const Admin = () => {
   const { currentUser, logout } = useAuth();
   const { settings, updateSettings } = useSettings();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('forms');
   const [contactForms, setContactForms] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -31,12 +32,18 @@ const Admin = () => {
         api.get('/programs/'),
         api.get('/housing/'),
       ]);
-      setContactForms(formsRes.data);
-      setReviews(reviewsRes.data);
-      setPrograms(programsRes.data);
-      setHousing(housingRes.data);
+      // Handle paginated responses (DRF returns {results: [...]} when paginated)
+      setContactForms(Array.isArray(formsRes.data) ? formsRes.data : (formsRes.data.results || []));
+      setReviews(Array.isArray(reviewsRes.data) ? reviewsRes.data : (reviewsRes.data.results || []));
+      setPrograms(Array.isArray(programsRes.data) ? programsRes.data : (programsRes.data.results || []));
+      setHousing(Array.isArray(housingRes.data) ? housingRes.data : (housingRes.data.results || []));
     } catch (error) {
       console.error('Error fetching data:', error);
+      // Set empty arrays on error to prevent map errors
+      setContactForms([]);
+      setReviews([]);
+      setPrograms([]);
+      setHousing([]);
     } finally {
       setLoading(false);
     }
@@ -157,12 +164,28 @@ const Admin = () => {
   };
 
   const handleSaveSettings = async (newSettings) => {
-    const result = await updateSettings(newSettings);
+    try {
+      const result = await updateSettings(newSettings);
+      if (result.success) {
+        setEditingSettings(false);
+        alert('Settings updated successfully!');
+      } else {
+        const errorMsg = result.error || 'Unknown error occurred';
+        console.error('Settings update error:', errorMsg);
+        alert(`Error updating settings: ${errorMsg}`);
+      }
+    } catch (error) {
+      console.error('Settings update exception:', error);
+      alert(`Error updating settings: ${error.message || 'Please check the console for details'}`);
+    }
+  };
+
+  const handleLogout = async () => {
+    const result = await logout();
     if (result.success) {
-      setEditingSettings(false);
-      alert('Settings updated successfully!');
+      navigate('/');
     } else {
-      alert('Error updating settings');
+      console.error('Logout error:', result.error);
     }
   };
 
@@ -186,7 +209,7 @@ const Admin = () => {
           </div>
           <div className="admin-header-actions">
             <span>Welcome, {currentUser?.email}</span>
-            <button onClick={logout} className="btn btn-outline">Logout</button>
+            <button onClick={handleLogout} className="btn btn-outline">Logout</button>
           </div>
         </div>
       </div>
@@ -288,6 +311,9 @@ const Admin = () => {
 const ContactFormsTab = ({ forms, onDelete, onUpdate, editingItem, setEditingItem }) => {
   const [formData, setFormData] = useState({});
 
+  // Ensure forms is always an array
+  const formsArray = Array.isArray(forms) ? forms : [];
+
   const handleEdit = (form) => {
     setEditingItem(form.id);
     setFormData({
@@ -302,7 +328,7 @@ const ContactFormsTab = ({ forms, onDelete, onUpdate, editingItem, setEditingIte
 
   return (
     <div className="admin-tab-content">
-      <h2>Contact Form Submissions ({forms.length})</h2>
+      <h2>Contact Form Submissions ({formsArray.length})</h2>
       <div className="admin-table-wrapper">
         <table className="admin-table">
           <thead>
@@ -317,7 +343,7 @@ const ContactFormsTab = ({ forms, onDelete, onUpdate, editingItem, setEditingIte
             </tr>
           </thead>
           <tbody>
-            {forms.map(form => (
+            {formsArray.map(form => (
               <tr key={form.id}>
                 <td>{form.name}</td>
                 <td>{form.email}</td>
@@ -727,7 +753,25 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
   }, [settings]);
 
   const handleSave = () => {
-    onSave(formData);
+    // Create a clean copy of formData, excluding background_image unless it's a File
+    const dataToSave = { ...formData };
+    
+    // Only include background_image if it's a File object (new upload)
+    // Otherwise exclude it to let the backend keep the existing value
+    if (dataToSave.background_image) {
+      if (typeof dataToSave.background_image === 'string') {
+        // It's a URL string, don't send it (backend will keep existing)
+        delete dataToSave.background_image;
+      } else if (!(dataToSave.background_image instanceof File)) {
+        // Not a File object, remove it
+        delete dataToSave.background_image;
+      }
+    } else {
+      // No background_image value, remove it
+      delete dataToSave.background_image;
+    }
+    
+    onSave(dataToSave);
   };
 
   if (!editing) {

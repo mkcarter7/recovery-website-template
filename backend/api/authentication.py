@@ -32,11 +32,16 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             decoded_token = auth.verify_id_token(token)
             uid = decoded_token['uid']
             
-            # Return a user object (you can create a custom user model if needed)
-            # For now, we'll use a simple object
-            user = type('User', (), {'uid': uid, 'email': decoded_token.get('email')})()
+            # Return a user object with necessary attributes for Django REST Framework
+            # Create a simple object that mimics Django's User model
+            user = type('User', (), {
+                'uid': uid,
+                'email': decoded_token.get('email'),
+                'is_authenticated': True,
+                'is_active': True,
+                'is_anonymous': False,
+            })()
             return (user, None)
             
         except Exception as e:
             raise exceptions.AuthenticationFailed(f'Invalid token: {str(e)}')
-

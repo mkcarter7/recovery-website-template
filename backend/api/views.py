@@ -75,7 +75,7 @@ class ProgramViewSet(viewsets.ModelViewSet):
         return [IsAuthenticated()]
     
     def get_queryset(self):
-        if self.request.user.is_authenticated:
+        if hasattr(self.request.user, 'is_authenticated') and self.request.user.is_authenticated:
             return Program.objects.all()
         return Program.objects.filter(is_active=True)
 
@@ -90,7 +90,7 @@ class HousingViewSet(viewsets.ModelViewSet):
         return [IsAuthenticated()]
     
     def get_queryset(self):
-        if self.request.user.is_authenticated:
+        if hasattr(self.request.user, 'is_authenticated') and self.request.user.is_authenticated:
             return Housing.objects.all()
         return Housing.objects.filter(is_available=True)
 
@@ -100,13 +100,24 @@ class SiteSettingsViewSet(viewsets.ModelViewSet):
     serializer_class = SiteSettingsSerializer
     
     def get_permissions(self):
-        if self.action == 'retrieve':
+        if self.action in ['retrieve', 'public']:
             return [AllowAny()]
         return [IsAuthenticated()]
     
     def get_object(self):
         obj, created = SiteSettings.objects.get_or_create(pk=1)
         return obj
+    
+    def update(self, request, *args, **kwargs):
+        """Handle PUT/PATCH requests"""
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+    
+    def perform_update(self, serializer):
+        serializer.save()
     
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def public(self, request):
