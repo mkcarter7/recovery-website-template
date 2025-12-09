@@ -15,7 +15,12 @@ class ContactFormViewSet(viewsets.ModelViewSet):
     serializer_class = ContactFormSerializer
     
     def get_permissions(self):
-        if self.action == 'create':
+        # Allow public access for create and submit actions
+        action_name = getattr(self, 'action', None)
+        path = self.request.path if hasattr(self.request, 'path') else ''
+        
+        # Check if this is a submit or create endpoint
+        if action_name in ['create', 'submit'] or 'submit' in path:
             return [AllowAny()]
         return [IsAuthenticated()]
     
@@ -33,12 +38,22 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     
     def get_permissions(self):
-        if self.action == 'list' and 'public' in self.request.query_params:
+        # Allow public access for list with public param, and for custom actions
+        # Check both the action name and the URL path to handle custom actions
+        action_name = getattr(self, 'action', None)
+        path = self.request.path if hasattr(self.request, 'path') else ''
+        
+        # Check if this is a featured or public endpoint
+        if action_name in ['public', 'featured'] or 'featured' in path or 'public' in path:
             return [AllowAny()]
+        if action_name == 'list' and 'public' in self.request.query_params:
+            return [AllowAny()]
+        if action_name == 'list' and 'public' not in self.request.query_params:
+            return [IsAuthenticated()]
         return [IsAuthenticated()]
     
     def get_serializer_class(self):
-        if self.action == 'list' and 'public' in self.request.query_params:
+        if self.action in ['public', 'featured'] or (self.action == 'list' and 'public' in self.request.query_params):
             return PublicReviewSerializer
         return ReviewSerializer
     
@@ -53,7 +68,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def public(self, request):
         """Public endpoint for viewing approved reviews"""
-        reviews = self.get_queryset()
+        reviews = Review.objects.filter(is_approved=True)
         serializer = PublicReviewSerializer(reviews, many=True)
         return Response(serializer.data)
     
