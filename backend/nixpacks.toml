@@ -1,8 +1,9 @@
 [phases.setup]
-nixPkgs = ["python311", "python3Packages.pip"]
+nixPkgs = ["python311"]
 
 [phases.install]
 cmds = [
+  "curl -sS https://bootstrap.pypa.io/get-pip.py | python",
   "python -m pip install --upgrade pip setuptools wheel",
   "python -m pip install --no-cache-dir -r requirements.txt"
 ]
