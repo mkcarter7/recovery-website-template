@@ -270,13 +270,14 @@
   }
 
   .hero-subtitle {
-    font-size: 1.1rem !important;
-    padding: 0.5rem 1rem !important;
-    margin: 0 auto 1.5rem !important;
-    display: inline-block !important;
-    max-width: 90% !important;
-    text-align: center !important;
-    font-weight: 800 !important;
+    font-size: 1.1rem;
+    padding: 0.75rem 1.25rem;
+    margin: 0 auto 1.5rem;
+    display: inline-block;
+    max-width: 90%;
+    text-align: center;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.5);
   }
 
   .hero-buttons {
