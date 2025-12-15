@@ -841,7 +841,16 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
                     <img 
                       src={imageUrl}
                       alt="Background preview" 
-                      style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '5px', border: '1px solid #ddd', display: 'block' }}
+                      style={{ 
+                        maxWidth: '100%', 
+                        maxHeight: '200px', 
+                        width: 'auto',
+                        height: 'auto',
+                        borderRadius: '5px', 
+                        border: '1px solid #ddd', 
+                        display: 'block',
+                        marginTop: '10px'
+                      }}
                       onError={(e) => {
                         e.target.style.display = 'none';
                         e.target.nextSibling.style.display = 'block';
@@ -931,7 +940,16 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
               <img 
                 src={imagePreview} 
                 alt="Preview" 
-                style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '5px', border: '1px solid #ddd', marginTop: '10px', display: 'block' }}
+                style={{ 
+                  maxWidth: '100%', 
+                  maxHeight: '200px', 
+                  width: 'auto',
+                  height: 'auto',
+                  borderRadius: '5px', 
+                  border: '1px solid #ddd', 
+                  marginTop: '10px', 
+                  display: 'block' 
+                }}
                 onError={(e) => {
                   e.target.style.display = 'none';
                   const errorMsg = e.target.nextElementSibling;
