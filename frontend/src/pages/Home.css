@@ -262,11 +262,18 @@
     background-attachment: scroll;
   }
   
-  /* Force background image to show on iOS */
+  /* iOS Safari fix: ensure background image shows */
   .hero.has-background-image {
     background-image: inherit !important;
     -webkit-background-size: cover !important;
     background-size: cover !important;
+    -webkit-background-position: center center !important;
+    background-position: center center !important;
+  }
+  
+  /* Show iOS img fallback on mobile */
+  .hero-background-image-ios {
+    display: block !important;
   }
   
   .hero.has-background-image::before {
@@ -348,11 +355,18 @@
     background-attachment: scroll;
   }
   
-  /* Force background image to show on iOS */
+  /* iOS Safari fix: ensure background image shows */
   .hero.has-background-image {
     background-image: inherit !important;
     -webkit-background-size: cover !important;
     background-size: cover !important;
+    -webkit-background-position: center center !important;
+    background-position: center center !important;
+  }
+  
+  /* Show iOS img fallback on mobile */
+  .hero-background-image-ios {
+    display: block !important;
   }
   
   .hero.has-background-image::before {

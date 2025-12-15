@@ -67,6 +67,15 @@ const Home = () => {
 
   const backgroundImageUrl = getBackgroundImageUrl();
   const hasBackgroundImage = backgroundImageUrl !== 'none' && settings.background_image;
+  
+  // Extract the actual URL from the CSS url() format for iOS img fallback
+  const getImageUrlForIOS = () => {
+    if (!hasBackgroundImage) return null;
+    const urlMatch = backgroundImageUrl.match(/url\(['"]?([^'"]+)['"]?\)/);
+    return urlMatch ? urlMatch[1] : null;
+  };
+  
+  const imageUrlForIOS = getImageUrlForIOS();
 
   return (
     <div className="home">
@@ -78,8 +87,35 @@ const Home = () => {
           backgroundImage: backgroundImageUrl,
           WebkitBackgroundSize: 'cover',
           backgroundSize: 'cover',
+          WebkitBackgroundPosition: 'center center',
+          backgroundPosition: 'center center',
+          WebkitBackgroundRepeat: 'no-repeat',
+          backgroundRepeat: 'no-repeat',
         }}
       >
+        {/* iOS fallback: absolutely positioned img element */}
+        {imageUrlForIOS && (
+          <img 
+            src={imageUrlForIOS}
+            alt=""
+            className="hero-background-image-ios"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+              zIndex: -1,
+              pointerEvents: 'none',
+            }}
+            onError={(e) => {
+              // Hide if image fails to load
+              e.target.style.display = 'none';
+            }}
+          />
+        )}
         <div className="container">
           <div className="hero-content">
             <h1>
