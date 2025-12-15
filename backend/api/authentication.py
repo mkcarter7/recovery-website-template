@@ -4,7 +4,10 @@ import firebase_admin
 from firebase_admin import credentials, auth
 import os
 import json
+import logging
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 
 class FirebaseAuthentication(authentication.BaseAuthentication):
@@ -54,7 +57,7 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
                                 cred_initialized = True
                     
                     except Exception as e:
-                        print(f"Error initializing Firebase with provided credentials: {e}")
+                        logger.error(f"Error initializing Firebase with provided credentials: {e}", exc_info=True)
                         cred_initialized = False
                 
                 # If we couldn't initialize with provided credentials, raise an error
@@ -66,8 +69,15 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
                         f"Please ensure it contains valid Firebase credentials JSON for project 'ndchancerecovery'."
                     )
             
-            # Verify the token
-            decoded_token = auth.verify_id_token(token)
+            # Verify the token using the correct app instance
+            # Try to get the named app, fallback to default if it doesn't exist
+            try:
+                app = firebase_admin.get_app('ndchancerecovery')
+            except ValueError:
+                # Named app doesn't exist, use default
+                app = firebase_admin.get_app()
+            
+            decoded_token = auth.verify_id_token(token, app=app)
             uid = decoded_token['uid']
             
             # Return a user object with necessary attributes for Django REST Framework
