@@ -84,6 +84,16 @@ export const SettingsProvider = ({ children }) => {
         // Use axios with FormData (axios handles Content-Type automatically)
         const token = localStorage.getItem('firebaseToken');
         const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+        
+        // Validate API URL is set
+        if (!process.env.REACT_APP_API_URL && window.location.hostname !== 'localhost') {
+          console.error('REACT_APP_API_URL is not set! API requests will fail.');
+          return { 
+            success: false, 
+            error: 'API URL not configured. Please set REACT_APP_API_URL in Railway environment variables.' 
+          };
+        }
+        
         const headers = {};
         if (token) {
           headers['Authorization'] = `Bearer ${token}`;

@@ -15,9 +15,11 @@ Set these in Railway for your **frontend service**:
 5. `REACT_APP_FIREBASE_MESSAGING_SENDER_ID` - Your Firebase messaging sender ID
 6. `REACT_APP_FIREBASE_APP_ID` - Your Firebase app ID
 
-### Optional Environment Variables
+### Required Environment Variables (continued)
 
-- `REACT_APP_API_URL` - Backend API URL (defaults to `http://localhost:8000/api`)
+7. `REACT_APP_API_URL` - **REQUIRED** Backend API URL (e.g., `https://your-backend-service.up.railway.app/api`)
+
+**Important:** You must set `REACT_APP_API_URL` to your backend Railway service URL. Without this, API requests will fail with 405 errors.
 
 ## How to Set Environment Variables in Railway
 
@@ -93,6 +95,23 @@ This error occurs when your Railway domain is not authorized in Firebase Console
 10. Try logging in again
 
 **Important:** If you have a custom domain, make sure to add that as well.
+
+### Error: 405 Method Not Allowed when updating settings
+
+This error occurs when `REACT_APP_API_URL` is not set, causing API requests to go to the wrong URL.
+
+**Solution:**
+1. Go to your Railway project dashboard
+2. Select your **frontend service**
+3. Go to the **Variables** tab
+4. Add `REACT_APP_API_URL` with your backend service URL:
+   - Format: `https://your-backend-service.up.railway.app/api`
+   - Example: `https://backend-production-abc123.up.railway.app/api`
+5. To find your backend URL:
+   - Go to your backend service in Railway
+   - Copy the public domain URL
+   - Add `/api` to the end
+6. Trigger a new deployment after adding the variable
 
 ### Variables Not Working After Setting Them
 
