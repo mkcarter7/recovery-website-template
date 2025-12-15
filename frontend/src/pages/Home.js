@@ -65,14 +65,17 @@ const Home = () => {
     return imageUrl ? `url('${imageUrl}')` : 'none';
   };
 
+  const backgroundImageUrl = getBackgroundImageUrl();
+  const hasBackgroundImage = backgroundImageUrl !== 'none' && settings.background_image;
+
   return (
     <div className="home">
       {/* Hero Section */}
       <section 
-        className={`hero ${settings.background_image ? 'has-background-image' : ''}`}
+        className={`hero ${hasBackgroundImage ? 'has-background-image' : ''}`}
         style={{
           backgroundColor: settings.background_color,
-          backgroundImage: getBackgroundImageUrl(),
+          backgroundImage: backgroundImageUrl,
         }}
       >
         <div className="container">
