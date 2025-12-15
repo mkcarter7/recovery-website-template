@@ -12,4 +12,4 @@ cmds = [
 ]
 
 [start]
-cmd = "PORT=$PORT node_modules/.bin/serve -s build"
+cmd = "PORT=$PORT npx serve build -s -l $PORT"
