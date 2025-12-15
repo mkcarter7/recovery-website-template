@@ -12,4 +12,4 @@ cmds = [
 ]
 
 [start]
-cmd = "PORT=$PORT npx serve build -s -l $PORT"
+cmd = "npx serve -s build --listen $PORT --no-clipboard --no-telemetry"
