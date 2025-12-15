@@ -262,6 +262,13 @@
     background-attachment: scroll;
   }
   
+  /* Force background image to show on iOS */
+  .hero.has-background-image {
+    background-image: inherit !important;
+    -webkit-background-size: cover !important;
+    background-size: cover !important;
+  }
+  
   .hero.has-background-image::before {
     display: none !important;
   }
@@ -269,6 +276,7 @@
   .hero h1 {
     font-size: 2rem;
     padding: 0 15px;
+    color: #000000 !important;
   }
 
   .hero-subtitle {
@@ -340,6 +348,13 @@
     background-attachment: scroll;
   }
   
+  /* Force background image to show on iOS */
+  .hero.has-background-image {
+    background-image: inherit !important;
+    -webkit-background-size: cover !important;
+    background-size: cover !important;
+  }
+  
   .hero.has-background-image::before {
     display: none !important;
   }
@@ -347,6 +362,7 @@
   .hero h1 {
     font-size: 1.75rem;
     padding: 0 10px;
+    color: #000000 !important;
   }
 
   .hero-subtitle {
