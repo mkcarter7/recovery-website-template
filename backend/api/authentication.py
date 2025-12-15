@@ -22,39 +22,49 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             # Initialize Firebase Admin if not already initialized
             if not firebase_admin._apps:
                 cred_path = settings.FIREBASE_CREDENTIALS_PATH
+                cred_initialized = False
                 
-                # Check if FIREBASE_CREDENTIALS_PATH is a JSON string (Railway format)
                 if cred_path:
-                    # Try to parse as JSON (Railway provides credentials as JSON in env var)
                     try:
-                        if isinstance(cred_path, str):
+                        # Railway may provide credentials as:
+                        # 1. A JSON string in the environment variable
+                        # 2. A file path to a JSON file
+                        # 3. A dict (if parsed by Django settings)
+                        
+                        if isinstance(cred_path, dict):
+                            # Already a dict, use it directly
+                            cred = credentials.Certificate(cred_path)
+                            firebase_admin.initialize_app(cred, name='ndchancerecovery')
+                            cred_initialized = True
+                        elif isinstance(cred_path, str):
                             # Check if it's a JSON string
                             if cred_path.strip().startswith('{'):
-                                cred_dict = json.loads(cred_path)
-                                cred = credentials.Certificate(cred_dict)
-                                firebase_admin.initialize_app(cred)
-                            # Check if it's a file path
-                            elif os.path.exists(cred_path):
+                                try:
+                                    cred_dict = json.loads(cred_path)
+                                    cred = credentials.Certificate(cred_dict)
+                                    firebase_admin.initialize_app(cred, name='ndchancerecovery')
+                                    cred_initialized = True
+                                except json.JSONDecodeError:
+                                    pass
+                            
+                            # If not JSON, try as file path
+                            if not cred_initialized and os.path.exists(cred_path):
                                 cred = credentials.Certificate(cred_path)
-                                firebase_admin.initialize_app(cred)
-                            else:
-                                # Fallback to default credentials
-                                firebase_admin.initialize_app()
-                        else:
-                            # It's already a dict (shouldn't happen but handle it)
-                            cred = credentials.Certificate(cred_path)
-                            firebase_admin.initialize_app(cred)
-                    except (json.JSONDecodeError, ValueError):
-                        # Not valid JSON, try as file path
-                        if os.path.exists(cred_path):
-                            cred = credentials.Certificate(cred_path)
-                            firebase_admin.initialize_app(cred)
-                        else:
-                            # Fallback to default credentials
-                            firebase_admin.initialize_app()
-                else:
-                    # No credentials path set, use default (will use Railway's if available)
-                    firebase_admin.initialize_app()
+                                firebase_admin.initialize_app(cred, name='ndchancerecovery')
+                                cred_initialized = True
+                    
+                    except Exception as e:
+                        print(f"Error initializing Firebase with provided credentials: {e}")
+                        cred_initialized = False
+                
+                # If we couldn't initialize with provided credentials, raise an error
+                # Don't fall back to default (Railway's) credentials
+                if not cred_initialized:
+                    raise Exception(
+                        f"Firebase credentials not properly configured. "
+                        f"FIREBASE_CREDENTIALS_PATH type: {type(cred_path)}, value: {str(cred_path)[:100] if cred_path else 'None'}. "
+                        f"Please ensure it contains valid Firebase credentials JSON for project 'ndchancerecovery'."
+                    )
             
             # Verify the token
             decoded_token = auth.verify_id_token(token)
