@@ -260,6 +260,10 @@
     background-attachment: scroll !important;
   }
   
+  .hero.has-background-image::before {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+  }
+  
   .hero h1 {
     font-size: 2rem;
     padding: 0 15px;
