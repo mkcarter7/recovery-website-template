@@ -40,6 +40,37 @@
   color: #DC143C;
 }
 
+.social-media-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.social-media-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: #808080;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.social-media-links a:hover {
+  color: #DC143C;
+  background-color: rgba(220, 20, 60, 0.2);
+  transform: translateY(-2px);
+}
+
+.social-media-links a svg {
+  width: 20px;
+  height: 20px;
+}
+
 .footer-bottom {
   text-align: center;
   padding-top: 2rem;

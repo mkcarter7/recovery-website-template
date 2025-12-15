@@ -25,6 +25,12 @@ export const SettingsProvider = ({ children }) => {
     contact_email: '',
     contact_phone: '',
     address: '',
+    facebook_url: '',
+    instagram_url: '',
+    twitter_url: '',
+    linkedin_url: '',
+    youtube_url: '',
+    tiktok_url: '',
   });
   const [loading, setLoading] = useState(true);
 

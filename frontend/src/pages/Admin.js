@@ -823,6 +823,21 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
             <strong>Address:</strong> {settings.address}
           </div>
           <div className="setting-item">
+            <strong>Social Media Links:</strong>
+            <div style={{ marginTop: '10px' }}>
+              {settings.facebook_url && <div>Facebook: <a href={settings.facebook_url} target="_blank" rel="noopener noreferrer">{settings.facebook_url}</a></div>}
+              {settings.instagram_url && <div>Instagram: <a href={settings.instagram_url} target="_blank" rel="noopener noreferrer">{settings.instagram_url}</a></div>}
+              {settings.twitter_url && <div>Twitter/X: <a href={settings.twitter_url} target="_blank" rel="noopener noreferrer">{settings.twitter_url}</a></div>}
+              {settings.linkedin_url && <div>LinkedIn: <a href={settings.linkedin_url} target="_blank" rel="noopener noreferrer">{settings.linkedin_url}</a></div>}
+              {settings.youtube_url && <div>YouTube: <a href={settings.youtube_url} target="_blank" rel="noopener noreferrer">{settings.youtube_url}</a></div>}
+              {settings.tiktok_url && <div>TikTok: <a href={settings.tiktok_url} target="_blank" rel="noopener noreferrer">{settings.tiktok_url}</a></div>}
+              {!settings.facebook_url && !settings.instagram_url && !settings.twitter_url && 
+               !settings.linkedin_url && !settings.youtube_url && !settings.tiktok_url && (
+                <span style={{ color: '#999' }}>No social media links set</span>
+              )}
+            </div>
+          </div>
+          <div className="setting-item">
             <strong>Background Image:</strong>
             {settings.background_image ? (
               <div style={{ marginTop: '10px' }}>
@@ -1022,6 +1037,61 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
             value={formData.address}
             onChange={(e) => setFormData({...formData, address: e.target.value})}
             rows="2"
+          />
+        </div>
+        <div className="form-group">
+          <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderTop: '1px solid #ddd', paddingTop: '1rem' }}>Social Media Links</h3>
+          <label>Facebook URL</label>
+          <input
+            type="url"
+            value={formData.facebook_url || ''}
+            onChange={(e) => setFormData({...formData, facebook_url: e.target.value})}
+            placeholder="https://www.facebook.com/yourpage"
+          />
+        </div>
+        <div className="form-group">
+          <label>Instagram URL</label>
+          <input
+            type="url"
+            value={formData.instagram_url || ''}
+            onChange={(e) => setFormData({...formData, instagram_url: e.target.value})}
+            placeholder="https://www.instagram.com/yourprofile"
+          />
+        </div>
+        <div className="form-group">
+          <label>Twitter/X URL</label>
+          <input
+            type="url"
+            value={formData.twitter_url || ''}
+            onChange={(e) => setFormData({...formData, twitter_url: e.target.value})}
+            placeholder="https://twitter.com/yourhandle"
+          />
+        </div>
+        <div className="form-group">
+          <label>LinkedIn URL</label>
+          <input
+            type="url"
+            value={formData.linkedin_url || ''}
+            onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
+            placeholder="https://www.linkedin.com/company/yourcompany"
+          />
+        </div>
+        <div className="form-group">
+          <label>YouTube URL</label>
+          <input
+            type="url"
+            value={formData.youtube_url || ''}
+            onChange={(e) => setFormData({...formData, youtube_url: e.target.value})}
+            placeholder="https://www.youtube.com/channel/yourchannel"
+          />
+        </div>
+        <div className="form-group">
+          <label>TikTok URL</label>
+          <input
+            type="url"
+            value={formData.tiktok_url || ''}
+            onChange={(e) => setFormData({...formData, tiktok_url: e.target.value})}
+            placeholder="https://www.tiktok.com/@yourhandle"
           />
         </div>
         <div className="edit-actions">

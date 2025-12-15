@@ -17,6 +17,14 @@ class SiteSettings(models.Model):
     contact_phone = models.CharField(max_length=20, default="(555) 123-4567")
     address = models.TextField(default="123 Recovery Street, City, State 12345")
     
+    # Social Media Links
+    facebook_url = models.URLField(max_length=500, blank=True, null=True, help_text="Facebook page URL")
+    instagram_url = models.URLField(max_length=500, blank=True, null=True, help_text="Instagram profile URL")
+    twitter_url = models.URLField(max_length=500, blank=True, null=True, help_text="Twitter/X profile URL")
+    linkedin_url = models.URLField(max_length=500, blank=True, null=True, help_text="LinkedIn page URL")
+    youtube_url = models.URLField(max_length=500, blank=True, null=True, help_text="YouTube channel URL")
+    tiktok_url = models.URLField(max_length=500, blank=True, null=True, help_text="TikTok profile URL")
+    
     class Meta:
         verbose_name_plural = "Site Settings"
     
