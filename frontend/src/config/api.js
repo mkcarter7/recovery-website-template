@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+let API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
 // Log API URL for debugging (only in production)
 if (process.env.NODE_ENV === 'production') {
@@ -8,6 +8,11 @@ if (process.env.NODE_ENV === 'production') {
   if (!process.env.REACT_APP_API_URL) {
     console.error('⚠️ REACT_APP_API_URL is not set! API requests will fail.');
     console.error('Please set REACT_APP_API_URL in Railway environment variables and redeploy.');
+  } else if (API_BASE_URL.startsWith('/')) {
+    console.error('⚠️ REACT_APP_API_URL appears to be a relative path:', API_BASE_URL);
+    console.error('It must be a full URL like: https://your-backend.up.railway.app/api');
+  } else if (!API_BASE_URL.startsWith('http://') && !API_BASE_URL.startsWith('https://')) {
+    console.error('⚠️ REACT_APP_API_URL must start with http:// or https://:', API_BASE_URL);
   }
 }
 

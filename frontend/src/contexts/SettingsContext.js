@@ -83,20 +83,40 @@ export const SettingsProvider = ({ children }) => {
         
         // Use axios with FormData (axios handles Content-Type automatically)
         const token = localStorage.getItem('firebaseToken');
-        const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+        let API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+        
+        // Validate API URL is set and is a full URL (not relative)
+        if (window.location.hostname !== 'localhost') {
+          if (!process.env.REACT_APP_API_URL) {
+            console.error('REACT_APP_API_URL is not set! API requests will fail.');
+            return { 
+              success: false, 
+              error: 'API URL not configured. Please set REACT_APP_API_URL in Railway environment variables and trigger a new deployment.' 
+            };
+          }
+          
+          // Check if it's a relative path (starts with /)
+          if (API_BASE_URL.startsWith('/')) {
+            console.error('REACT_APP_API_URL appears to be a relative path:', API_BASE_URL);
+            console.error('It must be a full URL like: https://your-backend.up.railway.app/api');
+            return { 
+              success: false, 
+              error: 'REACT_APP_API_URL must be a full URL (starting with http:// or https://), not a relative path.' 
+            };
+          }
+          
+          // Ensure it starts with http:// or https://
+          if (!API_BASE_URL.startsWith('http://') && !API_BASE_URL.startsWith('https://')) {
+            console.error('REACT_APP_API_URL must start with http:// or https://:', API_BASE_URL);
+            return { 
+              success: false, 
+              error: 'REACT_APP_API_URL must be a full URL starting with http:// or https://' 
+            };
+          }
+        }
         
         // Log the URL being used for debugging
         console.log('Making PATCH request to:', `${API_BASE_URL}/settings/1/`);
-        
-        // Validate API URL is set
-        if (!process.env.REACT_APP_API_URL && window.location.hostname !== 'localhost') {
-          console.error('REACT_APP_API_URL is not set! API requests will fail.');
-          console.error('Current API_BASE_URL:', API_BASE_URL);
-          return { 
-            success: false, 
-            error: 'API URL not configured. Please set REACT_APP_API_URL in Railway environment variables and trigger a new deployment.' 
-          };
-        }
         
         const headers = {};
         if (token) {
