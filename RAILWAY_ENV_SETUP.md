@@ -82,4 +82,3 @@ React environment variables are embedded at **build time**, not runtime. You mus
 1. Set the variables in Railway
 2. Trigger a new deployment (the build will pick them up)
 3. The variables will be embedded in the built JavaScript files
-

@@ -747,29 +747,35 @@ const HousingForm = ({ formData, setFormData, onSave, onCancel }) => (
 // Settings Tab Component
 const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
   const [formData, setFormData] = useState(settings);
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
     setFormData(settings);
+    // Set preview if there's an existing image
+    if (settings.background_image && typeof settings.background_image === 'string') {
+      const apiBaseUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:8000';
+      const imageUrl = settings.background_image.startsWith('http') 
+        ? settings.background_image 
+        : `${apiBaseUrl}${settings.background_image}`;
+      setImagePreview(imageUrl);
+    } else {
+      setImagePreview(null);
+    }
   }, [settings]);
 
   const handleSave = () => {
-    // Create a clean copy of formData, excluding background_image unless it's a File
+    // Create a clean copy of formData
     const dataToSave = { ...formData };
     
-    // Only include background_image if it's a File object (new upload)
-    // Otherwise exclude it to let the backend keep the existing value
-    if (dataToSave.background_image) {
-      if (typeof dataToSave.background_image === 'string') {
-        // It's a URL string, don't send it (backend will keep existing)
-        delete dataToSave.background_image;
-      } else if (!(dataToSave.background_image instanceof File)) {
-        // Not a File object, remove it
-        delete dataToSave.background_image;
-      }
-    } else {
-      // No background_image value, remove it
+    // Handle background_image:
+    // - If it's a File object, include it (new upload)
+    // - If it's null, include it (to remove existing image)
+    // - If it's a string (URL), exclude it (keep existing image)
+    if (dataToSave.background_image && typeof dataToSave.background_image === 'string') {
+      // It's a URL string, don't send it (backend will keep existing)
       delete dataToSave.background_image;
     }
+    // If it's null or a File, keep it in dataToSave
     
     onSave(dataToSave);
   };
@@ -823,6 +829,22 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
           <div className="setting-item">
             <strong>Address:</strong> {settings.address}
           </div>
+          <div className="setting-item">
+            <strong>Background Image:</strong>
+            {settings.background_image ? (
+              <div style={{ marginTop: '10px' }}>
+                <img 
+                  src={settings.background_image.startsWith('http') 
+                    ? settings.background_image 
+                    : `${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:8000'}${settings.background_image}`}
+                  alt="Background preview" 
+                  style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '5px', border: '1px solid #ddd' }}
+                />
+              </div>
+            ) : (
+              <span style={{ color: '#999' }}>No background image set</span>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -875,6 +897,50 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
             onChange={(e) => setFormData({...formData, background_color: e.target.value})}
             placeholder="#FFFFFF"
           />
+        </div>
+        <div className="form-group">
+          <label>Background Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                setFormData({...formData, background_image: file});
+                // Create preview
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setImagePreview(reader.result);
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+          {imagePreview && (
+            <div style={{ marginTop: '10px' }}>
+              <img 
+                src={imagePreview} 
+                alt="Preview" 
+                style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '5px', border: '1px solid #ddd', marginTop: '10px' }}
+              />
+              <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '5px' }}>
+                {formData.background_image instanceof File ? formData.background_image.name : 'Current image'}
+              </p>
+            </div>
+          )}
+          {formData.background_image && !(formData.background_image instanceof File) && (
+            <button
+              type="button"
+              onClick={() => {
+                setFormData({...formData, background_image: null});
+                setImagePreview(null);
+              }}
+              style={{ marginTop: '10px', padding: '5px 10px', fontSize: '0.9rem' }}
+              className="btn btn-outline"
+            >
+              Remove Image
+            </button>
+          )}
         </div>
         <div className="form-group">
           <label>Hero Title</label>

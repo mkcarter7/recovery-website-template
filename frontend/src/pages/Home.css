@@ -19,6 +19,12 @@
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 0;
+  transition: background-color 0.3s ease;
+}
+
+/* Reduce overlay opacity when background image is present */
+.hero.has-background-image::before {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .hero-content {

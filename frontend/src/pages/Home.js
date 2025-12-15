@@ -44,14 +44,34 @@ const Home = () => {
     ));
   };
 
+  // Construct full URL for background image if it's a relative path
+  const getBackgroundImageUrl = () => {
+    if (!settings.background_image) return 'none';
+    
+    // If it's already a full URL (starts with http:// or https://), use it as is
+    if (settings.background_image.startsWith('http://') || settings.background_image.startsWith('https://')) {
+      return `url(${settings.background_image})`;
+    }
+    
+    // If it's a relative path, construct the full URL using API base URL
+    const apiBaseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    // Remove /api from the end if present, since media files are served from root
+    const baseUrl = apiBaseUrl.replace(/\/api$/, '');
+    const imageUrl = settings.background_image.startsWith('/') 
+      ? `${baseUrl}${settings.background_image}`
+      : `${baseUrl}/${settings.background_image}`;
+    
+    return `url(${imageUrl})`;
+  };
+
   return (
     <div className="home">
       {/* Hero Section */}
       <section 
-        className="hero"
+        className={`hero ${settings.background_image ? 'has-background-image' : ''}`}
         style={{
           backgroundColor: settings.background_color,
-          backgroundImage: settings.background_image ? `url(${settings.background_image})` : 'none',
+          backgroundImage: getBackgroundImageUrl(),
         }}
       >
         <div className="container">

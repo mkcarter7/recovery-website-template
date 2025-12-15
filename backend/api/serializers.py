@@ -41,6 +41,8 @@ class HousingSerializer(serializers.ModelSerializer):
 
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
+    background_image = serializers.ImageField(required=False, allow_null=True)
+    
     class Meta:
         model = SiteSettings
         fields = ['site_name', 'primary_color', 'secondary_color', 'accent_color', 
@@ -50,6 +52,18 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
             'background_image': {'required': False, 'allow_null': True}
         }
     
+    def to_representation(self, instance):
+        """Return full URL for background_image"""
+        representation = super().to_representation(instance)
+        if instance.background_image:
+            request = self.context.get('request')
+            if request:
+                representation['background_image'] = request.build_absolute_uri(instance.background_image.url)
+            else:
+                # Fallback if no request context
+                representation['background_image'] = instance.background_image.url
+        return representation
+    
     def validate(self, data):
         """Custom validation for settings"""
         # Allow partial updates
@@ -57,9 +71,12 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data):
         """Handle update with proper field handling"""
-        # Remove background_image if it's None or empty string
+        # Handle background_image deletion (empty string means delete)
         if 'background_image' in validated_data:
-            if validated_data['background_image'] is None or validated_data['background_image'] == '':
-                validated_data.pop('background_image', None)
+            if validated_data['background_image'] == '' or validated_data['background_image'] is None:
+                # Delete the existing image
+                if instance.background_image:
+                    instance.background_image.delete(save=False)
+                validated_data['background_image'] = None
         
         return super().update(instance, validated_data)

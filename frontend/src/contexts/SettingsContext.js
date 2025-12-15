@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import api from '../config/api';
+import axios from 'axios';
 
 const SettingsContext = createContext();
 
@@ -53,10 +54,54 @@ export const SettingsProvider = ({ children }) => {
 
   const updateSettings = async (newSettings) => {
     try {
-      const response = await api.patch('/settings/1/', newSettings);
-      setSettings(response.data);
-      applyTheme(response.data);
-      return { success: true };
+      // Check if there's a file to upload (background_image)
+      const hasFile = newSettings.background_image instanceof File;
+      
+      let response;
+      if (hasFile || newSettings.background_image === null) {
+        // Use FormData for file uploads or when removing image
+        const formData = new FormData();
+        
+        // Add all fields to FormData
+        Object.keys(newSettings).forEach(key => {
+          if (key === 'background_image') {
+            if (newSettings[key] instanceof File) {
+              formData.append('background_image', newSettings[key]);
+            } else if (newSettings[key] === null) {
+              // Send empty string to remove image
+              formData.append('background_image', '');
+            }
+            // If it's a string (URL), don't include it (backend keeps existing)
+          } else {
+            // Convert non-file values to strings
+            const value = newSettings[key];
+            if (value !== null && value !== undefined) {
+              formData.append(key, typeof value === 'object' ? JSON.stringify(value) : value);
+            }
+          }
+        });
+        
+        // Use axios with FormData (axios handles Content-Type automatically)
+        const token = localStorage.getItem('firebaseToken');
+        const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+        const headers = {};
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        // Use axios directly for FormData request
+        response = await axios.patch(`${API_BASE_URL}/settings/1/`, formData, { headers });
+        
+        setSettings(response.data);
+        applyTheme(response.data);
+        return { success: true };
+      } else {
+        // Regular JSON request for non-file updates
+        response = await api.patch('/settings/1/', newSettings);
+        setSettings(response.data);
+        applyTheme(response.data);
+        return { success: true };
+      }
     } catch (error) {
       console.error('Error updating settings:', error);
       let errorMessage = 'Unknown error occurred';
