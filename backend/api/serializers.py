@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.conf import settings
 from .models import ContactForm, Review, Program, Housing, SiteSettings
 
 
@@ -57,11 +58,28 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         if instance.background_image:
             request = self.context.get('request')
+            image_url = instance.background_image.url
+            
             if request:
-                representation['background_image'] = request.build_absolute_uri(instance.background_image.url)
+                # Try to build absolute URI
+                try:
+                    # Use build_absolute_uri which handles protocol and host correctly
+                    representation['background_image'] = request.build_absolute_uri(image_url)
+                except Exception:
+                    # Fallback: construct URL manually using request info
+                    try:
+                        scheme = request.scheme if hasattr(request, 'scheme') else 'https'
+                        host = request.get_host() if hasattr(request, 'get_host') else ''
+                        if host:
+                            representation['background_image'] = f"{scheme}://{host}{image_url}"
+                        else:
+                            # Last resort: use relative URL
+                            representation['background_image'] = image_url
+                    except Exception:
+                        representation['background_image'] = image_url
             else:
-                # Fallback if no request context
-                representation['background_image'] = instance.background_image.url
+                # No request context - return relative URL (frontend will construct full URL)
+                representation['background_image'] = image_url
         return representation
     
     def validate(self, data):
