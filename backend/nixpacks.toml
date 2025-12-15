@@ -10,9 +10,8 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "python manage.py migrate --noinput",
   "python manage.py collectstatic --noinput"
 ]
 
 [start]
-cmd = "gunicorn recovery_center.wsgi --log-file - --bind 0.0.0.0:$PORT"
+cmd = "python manage.py migrate --noinput && gunicorn recovery_center.wsgi --log-file - --bind 0.0.0.0:$PORT"
