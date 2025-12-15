@@ -85,12 +85,16 @@ export const SettingsProvider = ({ children }) => {
         const token = localStorage.getItem('firebaseToken');
         const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
         
+        // Log the URL being used for debugging
+        console.log('Making PATCH request to:', `${API_BASE_URL}/settings/1/`);
+        
         // Validate API URL is set
         if (!process.env.REACT_APP_API_URL && window.location.hostname !== 'localhost') {
           console.error('REACT_APP_API_URL is not set! API requests will fail.');
+          console.error('Current API_BASE_URL:', API_BASE_URL);
           return { 
             success: false, 
-            error: 'API URL not configured. Please set REACT_APP_API_URL in Railway environment variables.' 
+            error: 'API URL not configured. Please set REACT_APP_API_URL in Railway environment variables and trigger a new deployment.' 
           };
         }
         
