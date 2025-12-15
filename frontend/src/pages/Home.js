@@ -70,6 +70,10 @@ const Home = () => {
         style={{
           backgroundColor: settings.background_color,
           backgroundImage: getBackgroundImageUrl(),
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'scroll',
         }}
       >
         <div className="container">

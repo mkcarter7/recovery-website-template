@@ -261,6 +261,10 @@
   .hero {
     padding: 60px 0;
     min-height: 300px;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll !important;
   }
   
   .hero h1 {
@@ -333,6 +337,10 @@
   .hero {
     padding: 50px 0;
     min-height: 250px;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll !important;
   }
   
   .hero h1 {
