@@ -86,6 +86,7 @@ const Footer = () => {
         
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} {settings.site_name}. All rights reserved.</p>
+          <p className="footer-credit">Website by <span className="rockstar-social">RockStar Social</span></p>
         </div>
       </div>
     </footer>

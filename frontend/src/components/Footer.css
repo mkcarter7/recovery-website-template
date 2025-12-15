@@ -78,6 +78,25 @@
   color: #808080;
 }
 
+.footer-bottom p {
+  margin: 0.5rem 0;
+}
+
+.footer-credit {
+  font-size: 0.9rem;
+  margin-top: 0.75rem !important;
+}
+
+.rockstar-social {
+  color: #DC143C;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.rockstar-social:hover {
+  color: #FFFFFF;
+}
+
 @media (max-width: 1024px) {
   .footer {
     padding: 2.5rem 0 1rem;
