@@ -76,6 +76,8 @@ const Home = () => {
         style={{
           backgroundColor: settings.background_color,
           backgroundImage: backgroundImageUrl,
+          WebkitBackgroundSize: 'cover',
+          backgroundSize: 'cover',
         }}
       >
         <div className="container">
