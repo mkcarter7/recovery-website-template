@@ -236,6 +236,16 @@
     font-size: 2.5rem;
   }
   
+  .hero-subtitle {
+    font-size: 1.3rem !important;
+    padding: 0.85rem 1.75rem !important;
+  }
+  
+  .hero-buttons .btn {
+    font-size: 1.05rem !important;
+    padding: 13px 30px !important;
+  }
+  
   .links-grid,
   .reviews-grid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
