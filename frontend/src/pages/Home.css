@@ -285,61 +285,6 @@
   padding: 60px 0;
 }
 
-.cta-social-links {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-top: 1.5rem;
-}
-
-.cta-social-links a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  color: #FFFFFF;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-.cta-social-links a:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-3px) scale(1.1);
-  box-shadow: 
-    0 6px 20px rgba(0, 0, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.cta-social-links a svg,
-.cta-social-links .social-icon-disabled svg {
-  width: 24px;
-  height: 24px;
-}
-
-.cta-social-links .social-icon-disabled {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  color: rgba(255, 255, 255, 0.3);
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: 50%;
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
 @media (max-width: 1024px) {
   .hero {
     padding: 80px 0;
@@ -391,10 +336,9 @@
     background-attachment: scroll !important;
   }
   
-  /* Ensure background image displays on mobile - preserve inline background-image */
+  /* Ensure background image displays on mobile */
   .hero.has-background-image {
     background-color: transparent !important;
-    /* Inline styles will handle background-image, but ensure it's not overridden */
   }
   
   /* Hide overlay on mobile when background image is present */
@@ -402,7 +346,7 @@
     display: none !important;
   }
   
-  /* Ensure img fallback is visible as backup for iOS */
+  /* Ensure img fallback is visible as backup */
   .hero-background-image-ios {
     display: block !important;
     position: absolute !important;
