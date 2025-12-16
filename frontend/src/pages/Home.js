@@ -8,9 +8,14 @@ const Home = () => {
   const { settings } = useSettings();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
     fetchFeaturedReviews();
+    // Detect iOS devices
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    setIsIOS(iOS);
   }, []);
 
   const fetchFeaturedReviews = async () => {
@@ -102,20 +107,20 @@ const Home = () => {
     <div className="home">
       {/* Hero Section */}
       <section 
-        className={`hero ${hasBackgroundImage ? 'has-background-image' : ''}`}
+        className={`hero ${hasBackgroundImage ? 'has-background-image' : ''} ${isIOS && hasBackgroundImage ? 'ios-device' : ''}`}
         style={{
           backgroundColor: hasBackgroundImage ? 'transparent' : settings.background_color,
-          backgroundImage: backgroundImageUrl,
-          WebkitBackgroundSize: 'cover',
-          backgroundSize: 'cover',
-          WebkitBackgroundPosition: 'center center',
-          backgroundPosition: 'center center',
-          WebkitBackgroundRepeat: 'no-repeat',
-          backgroundRepeat: 'no-repeat',
+          backgroundImage: (isIOS && hasBackgroundImage) ? 'none' : backgroundImageUrl,
+          WebkitBackgroundSize: (isIOS && hasBackgroundImage) ? 'none' : 'cover',
+          backgroundSize: (isIOS && hasBackgroundImage) ? 'none' : 'cover',
+          WebkitBackgroundPosition: (isIOS && hasBackgroundImage) ? 'none' : 'center center',
+          backgroundPosition: (isIOS && hasBackgroundImage) ? 'none' : 'center center',
+          WebkitBackgroundRepeat: (isIOS && hasBackgroundImage) ? 'none' : 'no-repeat',
+          backgroundRepeat: (isIOS && hasBackgroundImage) ? 'none' : 'no-repeat',
         }}
       >
-        {/* iOS fallback: absolutely positioned img element */}
-        {imageUrlForIOS && (
+        {/* iOS fallback: absolutely positioned img element - always show on iOS, show on mobile for other devices */}
+        {imageUrlForIOS && (isIOS || window.innerWidth <= 768) && (
           <img 
             src={imageUrlForIOS}
             alt=""
@@ -126,6 +131,7 @@ const Home = () => {
               left: 0,
               width: '100%',
               height: '100%',
+              minHeight: '100%',
               objectFit: 'cover',
               objectPosition: 'center',
               zIndex: -1,
@@ -134,6 +140,10 @@ const Home = () => {
             onError={(e) => {
               // Hide if image fails to load
               e.target.style.display = 'none';
+            }}
+            onLoad={(e) => {
+              // Ensure image is visible when loaded
+              e.target.style.display = 'block';
             }}
           />
         )}

@@ -12,9 +12,18 @@
   overflow: hidden;
 }
 
-/* Hide iOS img fallback on desktop (use CSS background) */
+/* Hide iOS img fallback on desktop (use CSS background) - but show on iOS devices */
 .hero-background-image-ios {
   display: none;
+}
+
+/* Show img element on iOS devices even on larger screens */
+.hero.ios-device .hero-background-image-ios {
+  display: block !important;
+}
+
+.hero.ios-device.has-background-image {
+  background-image: none !important;
 }
 
 .hero::before {
@@ -329,15 +338,11 @@
   .hero {
     padding: 60px 0;
     min-height: 300px;
-    background-size: cover !important;
-    -webkit-background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    background-attachment: scroll !important;
   }
   
-  /* Ensure background image displays on mobile */
+  /* Remove CSS background-image on mobile - use img element instead */
   .hero.has-background-image {
+    background-image: none !important;
     background-color: transparent !important;
   }
   
@@ -346,7 +351,7 @@
     display: none !important;
   }
   
-  /* Ensure img fallback is visible as backup */
+  /* Ensure img fallback is visible on mobile/iOS */
   .hero-background-image-ios {
     display: block !important;
     position: absolute !important;
@@ -359,7 +364,7 @@
     min-height: 100% !important;
     object-fit: cover !important;
     object-position: center center !important;
-    z-index: 0 !important;
+    z-index: -1 !important;
   }
   
   /* Ensure content is above the image */
@@ -441,15 +446,11 @@
   .hero {
     padding: 50px 0;
     min-height: 250px;
-    background-size: cover !important;
-    -webkit-background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    background-attachment: scroll !important;
   }
   
-  /* Ensure background image displays on mobile */
+  /* Remove CSS background-image on mobile - use img element instead */
   .hero.has-background-image {
+    background-image: none !important;
     background-color: transparent !important;
   }
   
@@ -458,7 +459,7 @@
     display: none !important;
   }
   
-  /* Ensure img fallback is visible as backup */
+  /* Ensure img fallback is visible on mobile/iOS */
   .hero-background-image-ios {
     display: block !important;
     position: absolute !important;
@@ -471,7 +472,7 @@
     min-height: 100% !important;
     object-fit: cover !important;
     object-position: center center !important;
-    z-index: 0 !important;
+    z-index: -1 !important;
   }
   
   /* Ensure content is above the image */

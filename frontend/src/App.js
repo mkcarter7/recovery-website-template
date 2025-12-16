@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Programs from './pages/Programs';
 import Contact from './pages/Contact';
+import Donate from './pages/Donate';
 import Admin from './pages/Admin';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -26,6 +27,7 @@ function AppContent() {
           <Route path="/about" element={<About />} />
           <Route path="/programs" element={<Programs />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/donate" element={<Donate />} />
           <Route path="/admin/login" element={<Login />} />
           <Route 
             path="/admin" 
