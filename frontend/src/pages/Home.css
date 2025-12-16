@@ -162,9 +162,25 @@
     0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.hero-social-links a svg {
+.hero-social-links a svg,
+.hero-social-links .social-icon-disabled svg {
   width: 24px;
   height: 24px;
+}
+
+.social-icon-disabled {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .quick-links {
