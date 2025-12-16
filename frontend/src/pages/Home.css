@@ -391,9 +391,10 @@
     background-attachment: scroll !important;
   }
   
-  /* Ensure background image displays on mobile */
+  /* Ensure background image displays on mobile - preserve inline background-image */
   .hero.has-background-image {
     background-color: transparent !important;
+    /* Don't override background-image - let inline styles handle it */
   }
   
   /* Hide overlay on mobile when background image is present */
