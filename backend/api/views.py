@@ -3,10 +3,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from .models import ContactForm, Review, Program, Housing, SiteSettings
+from .models import ContactForm, Review, Program, Housing, SiteSettings, AmazonWishList, Donor
 from .serializers import (
     ContactFormSerializer, ReviewSerializer, PublicReviewSerializer,
-    ProgramSerializer, HousingSerializer, SiteSettingsSerializer
+    ProgramSerializer, HousingSerializer, SiteSettingsSerializer,
+    AmazonWishListSerializer, DonorSerializer, PublicDonorSerializer
 )
 
 
@@ -139,4 +140,46 @@ class SiteSettingsViewSet(viewsets.ModelViewSet):
         """Public endpoint for site settings"""
         settings_obj, created = SiteSettings.objects.get_or_create(pk=1)
         serializer = self.get_serializer(settings_obj, context={'request': request})
+        return Response(serializer.data)
+
+
+class AmazonWishListViewSet(viewsets.ModelViewSet):
+    queryset = AmazonWishList.objects.filter(is_active=True)
+    serializer_class = AmazonWishListSerializer
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        return [IsAuthenticated()]
+    
+    def get_queryset(self):
+        if hasattr(self.request.user, 'is_authenticated') and self.request.user.is_authenticated:
+            return AmazonWishList.objects.all()
+        return AmazonWishList.objects.filter(is_active=True)
+
+
+class DonorViewSet(viewsets.ModelViewSet):
+    queryset = Donor.objects.filter(is_featured=True)
+    serializer_class = DonorSerializer
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve', 'feed']:
+            return [AllowAny()]
+        return [IsAuthenticated()]
+    
+    def get_serializer_class(self):
+        if self.action in ['feed', 'list'] and not (hasattr(self.request.user, 'is_authenticated') and self.request.user.is_authenticated):
+            return PublicDonorSerializer
+        return DonorSerializer
+    
+    def get_queryset(self):
+        if hasattr(self.request.user, 'is_authenticated') and self.request.user.is_authenticated:
+            return Donor.objects.all()
+        return Donor.objects.filter(is_featured=True).order_by('-created_at')
+    
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def feed(self, request):
+        """Public endpoint for donor news feed (homepage)"""
+        donors = Donor.objects.filter(is_featured=True).order_by('-created_at')[:20]
+        serializer = PublicDonorSerializer(donors, many=True)
         return Response(serializer.data)

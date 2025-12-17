@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContactForm, Review, Program, Housing, SiteSettings
+from .models import ContactForm, Review, Program, Housing, SiteSettings, AmazonWishList, Donor
 
 
 @admin.register(ContactForm)
@@ -52,4 +52,20 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(AmazonWishList)
+class AmazonWishListAdmin(admin.ModelAdmin):
+    list_display = ['name', 'is_active', 'order', 'created_at']
+    list_filter = ['is_active']
+    search_fields = ['name', 'description']
+    readonly_fields = ['created_at', 'updated_at']
+
+
+@admin.register(Donor)
+class DonorAdmin(admin.ModelAdmin):
+    list_display = ['name', 'amount', 'is_anonymous', 'is_featured', 'created_at']
+    list_filter = ['is_featured', 'is_anonymous', 'created_at']
+    search_fields = ['name', 'message']
+    readonly_fields = ['created_at']
 

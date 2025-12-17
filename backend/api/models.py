@@ -119,3 +119,39 @@ class Housing(models.Model):
     
     def __str__(self):
         return self.name
+
+
+class AmazonWishList(models.Model):
+    """Amazon wish list links"""
+    name = models.CharField(max_length=200, help_text="Name/description of the wish list")
+    url = models.URLField(max_length=500, help_text="Full Amazon wish list URL")
+    description = models.TextField(blank=True, help_text="Optional description")
+    is_active = models.BooleanField(default=True, help_text="Show on website")
+    order = models.IntegerField(default=0, help_text="Display order")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name_plural = "Amazon Wish Lists"
+    
+    def __str__(self):
+        return self.name
+
+
+class Donor(models.Model):
+    """Donor information for news feed"""
+    name = models.CharField(max_length=200, help_text="Donor name (can be anonymous)")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Donation amount (optional)")
+    message = models.TextField(blank=True, help_text="Optional message from donor")
+    is_anonymous = models.BooleanField(default=False, help_text="Hide donor name")
+    is_featured = models.BooleanField(default=True, help_text="Show in news feed")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        display_name = "Anonymous" if self.is_anonymous else self.name
+        amount_str = f" - ${self.amount}" if self.amount else ""
+        return f"{display_name}{amount_str} - {self.created_at.strftime('%Y-%m-%d')}"

@@ -124,25 +124,40 @@ USE_S3 = config('USE_S3', default='False', cast=bool)
 
 if USE_S3:
     # AWS S3 settings for media files
-    AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-    AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
-    AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN', default=None)
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
-    AWS_S3_FILE_OVERWRITE = False
-    AWS_DEFAULT_ACL = 'public-read'  # Make uploaded files publicly accessible
-    AWS_QUERYSTRING_AUTH = False
-    AWS_S3_VERIFY = True
+    # Check if all required S3 credentials are provided
+    aws_access_key = config('AWS_ACCESS_KEY_ID', default=None)
+    aws_secret_key = config('AWS_SECRET_ACCESS_KEY', default=None)
+    aws_bucket = config('AWS_STORAGE_BUCKET_NAME', default=None)
     
-    # Media files stored in S3
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN or f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"}/'
-    MEDIA_ROOT = ''  # Not used when using S3
-else:
-    # Local media file storage (for development)
+    if not all([aws_access_key, aws_secret_key, aws_bucket]):
+        # If USE_S3 is True but credentials are missing, fall back to local storage
+        import warnings
+        warnings.warn(
+            "USE_S3 is True but AWS credentials are missing. Falling back to local storage.",
+            UserWarning
+        )
+        USE_S3 = False
+    else:
+        AWS_ACCESS_KEY_ID = aws_access_key
+        AWS_SECRET_ACCESS_KEY = aws_secret_key
+        AWS_STORAGE_BUCKET_NAME = aws_bucket
+        AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
+        AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN', default=None)
+        AWS_S3_OBJECT_PARAMETERS = {
+            'CacheControl': 'max-age=86400',
+        }
+        AWS_S3_FILE_OVERWRITE = False
+        AWS_DEFAULT_ACL = 'public-read'  # Make uploaded files publicly accessible
+        AWS_QUERYSTRING_AUTH = False
+        AWS_S3_VERIFY = True
+        
+        # Media files stored in S3
+        DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+        MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN or f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"}/'
+        MEDIA_ROOT = ''  # Not used when using S3
+
+if not USE_S3:
+    # Local media file storage (for development or when S3 is not configured)
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

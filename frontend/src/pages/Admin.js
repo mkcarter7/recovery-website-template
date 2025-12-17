@@ -13,6 +13,8 @@ const Admin = () => {
   const [reviews, setReviews] = useState([]);
   const [programs, setPrograms] = useState([]);
   const [housing, setHousing] = useState([]);
+  const [wishlists, setWishlists] = useState([]);
+  const [donors, setDonors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState(null);
   const [editingSettings, setEditingSettings] = useState(false);
@@ -25,23 +27,29 @@ const Admin = () => {
 
   const fetchAllData = async () => {
     try {
-      const [formsRes, reviewsRes, programsRes, housingRes] = await Promise.all([
+      const [formsRes, reviewsRes, programsRes, housingRes, wishlistsRes, donorsRes] = await Promise.all([
         api.get('/contact-forms/'),
         api.get('/reviews/'),
         api.get('/programs/'),
         api.get('/housing/'),
+        api.get('/wishlists/'),
+        api.get('/donors/'),
       ]);
       // Handle paginated responses (DRF returns {results: [...]} when paginated)
       setContactForms(Array.isArray(formsRes.data) ? formsRes.data : (formsRes.data.results || []));
       setReviews(Array.isArray(reviewsRes.data) ? reviewsRes.data : (reviewsRes.data.results || []));
       setPrograms(Array.isArray(programsRes.data) ? programsRes.data : (programsRes.data.results || []));
       setHousing(Array.isArray(housingRes.data) ? housingRes.data : (housingRes.data.results || []));
+      setWishlists(Array.isArray(wishlistsRes.data) ? wishlistsRes.data : (wishlistsRes.data.results || []));
+      setDonors(Array.isArray(donorsRes.data) ? donorsRes.data : (donorsRes.data.results || []));
     } catch (error) {
       // Set empty arrays on error to prevent map errors
       setContactForms([]);
       setReviews([]);
       setPrograms([]);
       setHousing([]);
+      setWishlists([]);
+      setDonors([]);
     } finally {
       setLoading(false);
     }
@@ -176,6 +184,68 @@ const Admin = () => {
     }
   };
 
+  const handleDeleteWishList = async (id) => {
+    if (window.confirm('Are you sure you want to delete this wish list?')) {
+      try {
+        await api.delete(`/wishlists/${id}/`);
+        setWishlists(wishlists.filter(w => w.id !== id));
+      } catch (error) {
+        alert('Error deleting wish list');
+      }
+    }
+  };
+
+  const handleUpdateWishList = async (id, data) => {
+    try {
+      const response = await api.patch(`/wishlists/${id}/`, data);
+      setWishlists(wishlists.map(w => w.id === id ? response.data : w));
+      setEditingItem(null);
+    } catch (error) {
+      alert('Error updating wish list');
+    }
+  };
+
+  const handleCreateWishList = async (data) => {
+    try {
+      const response = await api.post('/wishlists/', data);
+      setWishlists([...wishlists, response.data]);
+      setEditingItem(null);
+    } catch (error) {
+      alert('Error creating wish list');
+    }
+  };
+
+  const handleDeleteDonor = async (id) => {
+    if (window.confirm('Are you sure you want to delete this donor entry?')) {
+      try {
+        await api.delete(`/donors/${id}/`);
+        setDonors(donors.filter(d => d.id !== id));
+      } catch (error) {
+        alert('Error deleting donor');
+      }
+    }
+  };
+
+  const handleUpdateDonor = async (id, data) => {
+    try {
+      const response = await api.patch(`/donors/${id}/`, data);
+      setDonors(donors.map(d => d.id === id ? response.data : d));
+      setEditingItem(null);
+    } catch (error) {
+      alert('Error updating donor');
+    }
+  };
+
+  const handleCreateDonor = async (data) => {
+    try {
+      const response = await api.post('/donors/', data);
+      setDonors([...donors, response.data]);
+      setEditingItem(null);
+    } catch (error) {
+      alert('Error creating donor');
+    }
+  };
+
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {
@@ -235,6 +305,18 @@ const Admin = () => {
             Housing
           </button>
           <button 
+            className={activeTab === 'wishlists' ? 'active' : ''}
+            onClick={() => setActiveTab('wishlists')}
+          >
+            Wish Lists
+          </button>
+          <button 
+            className={activeTab === 'donors' ? 'active' : ''}
+            onClick={() => setActiveTab('donors')}
+          >
+            Donors
+          </button>
+          <button 
             className={activeTab === 'settings' ? 'active' : ''}
             onClick={() => setActiveTab('settings')}
           >
@@ -283,6 +365,28 @@ const Admin = () => {
               onDelete={handleDeleteHousing}
               onUpdate={handleUpdateHousing}
               onCreate={handleCreateHousing}
+              editingItem={editingItem}
+              setEditingItem={setEditingItem}
+            />
+          )}
+
+          {activeTab === 'wishlists' && (
+            <WishListsTab 
+              wishlists={wishlists}
+              onDelete={handleDeleteWishList}
+              onUpdate={handleUpdateWishList}
+              onCreate={handleCreateWishList}
+              editingItem={editingItem}
+              setEditingItem={setEditingItem}
+            />
+          )}
+
+          {activeTab === 'donors' && (
+            <DonorsTab 
+              donors={donors}
+              onDelete={handleDeleteDonor}
+              onUpdate={handleUpdateDonor}
+              onCreate={handleCreateDonor}
               editingItem={editingItem}
               setEditingItem={setEditingItem}
             />
@@ -1199,6 +1303,350 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
           <button onClick={handleSave} className="btn btn-primary">Save Settings</button>
           <button onClick={() => setEditing(false)} className="btn">Cancel</button>
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Wish Lists Tab Component
+const WishListsTab = ({ wishlists, onDelete, onUpdate, onCreate, editingItem, setEditingItem }) => {
+  const [formData, setFormData] = useState({});
+
+  const handleEdit = (wishlist) => {
+    setEditingItem(wishlist.id);
+    setFormData({
+      name: wishlist.name,
+      url: wishlist.url,
+      description: wishlist.description || '',
+      is_active: wishlist.is_active,
+      order: wishlist.order,
+    });
+  };
+
+  const handleCreate = () => {
+    setEditingItem('new');
+    setFormData({
+      name: '',
+      url: '',
+      description: '',
+      is_active: true,
+      order: 0,
+    });
+  };
+
+  const handleSave = (id) => {
+    if (id === 'new') {
+      onCreate(formData);
+    } else {
+      onUpdate(id, formData);
+    }
+  };
+
+  return (
+    <div className="admin-tab-content">
+      <div className="admin-tab-header">
+        <h2>Amazon Wish Lists ({wishlists.length})</h2>
+        <button onClick={handleCreate} className="btn btn-primary">Add Wish List</button>
+      </div>
+      <div className="admin-table-wrapper">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>URL</th>
+              <th>Description</th>
+              <th>Active</th>
+              <th>Order</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {editingItem === 'new' && (
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    value={formData.name || ''}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="Wish List Name"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="url"
+                    value={formData.url || ''}
+                    onChange={(e) => setFormData({...formData, url: e.target.value})}
+                    placeholder="Amazon Wish List URL"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={formData.description || ''}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    placeholder="Description"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={formData.is_active || false}
+                    onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    value={formData.order || 0}
+                    onChange={(e) => setFormData({...formData, order: parseInt(e.target.value) || 0})}
+                  />
+                </td>
+                <td>
+                  <button onClick={() => handleSave('new')} className="btn btn-sm">Save</button>
+                  <button onClick={() => setEditingItem(null)} className="btn btn-sm btn-outline">Cancel</button>
+                </td>
+              </tr>
+            )}
+            {wishlists.map(wishlist => (
+              <tr key={wishlist.id}>
+                {editingItem === wishlist.id ? (
+                  <>
+                    <td>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="url"
+                        value={formData.url}
+                        onChange={(e) => setFormData({...formData, url: e.target.value})}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={formData.description}
+                        onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={formData.is_active}
+                        onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={formData.order}
+                        onChange={(e) => setFormData({...formData, order: parseInt(e.target.value) || 0})}
+                      />
+                    </td>
+                    <td>
+                      <button onClick={() => handleSave(wishlist.id)} className="btn btn-sm">Save</button>
+                      <button onClick={() => setEditingItem(null)} className="btn btn-sm btn-outline">Cancel</button>
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td>{wishlist.name}</td>
+                    <td><a href={wishlist.url} target="_blank" rel="noopener noreferrer">{wishlist.url.substring(0, 50)}...</a></td>
+                    <td>{wishlist.description || 'N/A'}</td>
+                    <td>{wishlist.is_active ? 'Yes' : 'No'}</td>
+                    <td>{wishlist.order}</td>
+                    <td>
+                      <button onClick={() => handleEdit(wishlist)} className="btn btn-sm">Edit</button>
+                      <button onClick={() => onDelete(wishlist.id)} className="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+// Donors Tab Component
+const DonorsTab = ({ donors, onDelete, onUpdate, onCreate, editingItem, setEditingItem }) => {
+  const [formData, setFormData] = useState({});
+
+  const handleEdit = (donor) => {
+    setEditingItem(donor.id);
+    setFormData({
+      name: donor.name,
+      amount: donor.amount || '',
+      message: donor.message || '',
+      is_anonymous: donor.is_anonymous,
+      is_featured: donor.is_featured,
+    });
+  };
+
+  const handleCreate = () => {
+    setEditingItem('new');
+    setFormData({
+      name: '',
+      amount: '',
+      message: '',
+      is_anonymous: false,
+      is_featured: true,
+    });
+  };
+
+  const handleSave = (id) => {
+    const dataToSave = {
+      ...formData,
+      amount: formData.amount ? parseFloat(formData.amount) : null,
+    };
+    if (id === 'new') {
+      onCreate(dataToSave);
+    } else {
+      onUpdate(id, dataToSave);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString();
+  };
+
+  return (
+    <div className="admin-tab-content">
+      <div className="admin-tab-header">
+        <h2>Donors ({donors.length})</h2>
+        <button onClick={handleCreate} className="btn btn-primary">Add Donor</button>
+      </div>
+      <div className="admin-table-wrapper">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Amount</th>
+              <th>Message</th>
+              <th>Anonymous</th>
+              <th>Featured</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {editingItem === 'new' && (
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    value={formData.name || ''}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="Donor Name"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={formData.amount || ''}
+                    onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                    placeholder="Amount"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={formData.message || ''}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    placeholder="Message"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={formData.is_anonymous || false}
+                    onChange={(e) => setFormData({...formData, is_anonymous: e.target.checked})}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={formData.is_featured !== false}
+                    onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
+                  />
+                </td>
+                <td>-</td>
+                <td>
+                  <button onClick={() => handleSave('new')} className="btn btn-sm">Save</button>
+                  <button onClick={() => setEditingItem(null)} className="btn btn-sm btn-outline">Cancel</button>
+                </td>
+              </tr>
+            )}
+            {donors.map(donor => (
+              <tr key={donor.id}>
+                {editingItem === donor.id ? (
+                  <>
+                    <td>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={formData.amount || ''}
+                        onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={formData.message}
+                        onChange={(e) => setFormData({...formData, message: e.target.value})}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={formData.is_anonymous}
+                        onChange={(e) => setFormData({...formData, is_anonymous: e.target.checked})}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={formData.is_featured}
+                        onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
+                      />
+                    </td>
+                    <td>{formatDate(donor.created_at)}</td>
+                    <td>
+                      <button onClick={() => handleSave(donor.id)} className="btn btn-sm">Save</button>
+                      <button onClick={() => setEditingItem(null)} className="btn btn-sm btn-outline">Cancel</button>
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td>{donor.is_anonymous ? 'Anonymous' : donor.name}</td>
+                    <td>{donor.amount ? `$${parseFloat(donor.amount).toFixed(2)}` : 'N/A'}</td>
+                    <td className="message-cell">{donor.message || 'N/A'}</td>
+                    <td>{donor.is_anonymous ? 'Yes' : 'No'}</td>
+                    <td>{donor.is_featured ? 'Yes' : 'No'}</td>
+                    <td>{formatDate(donor.created_at)}</td>
+                    <td>
+                      <button onClick={() => handleEdit(donor)} className="btn btn-sm">Edit</button>
+                      <button onClick={() => onDelete(donor.id)} className="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

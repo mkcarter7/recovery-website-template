@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.conf import settings
-from .models import ContactForm, Review, Program, Housing, SiteSettings
+from .models import ContactForm, Review, Program, Housing, SiteSettings, AmazonWishList, Donor
 
 
 class ContactFormSerializer(serializers.ModelSerializer):
@@ -100,3 +100,30 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
                 validated_data['background_image'] = None
         
         return super().update(instance, validated_data)
+
+
+class AmazonWishListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AmazonWishList
+        fields = ['id', 'name', 'url', 'description', 'is_active', 'order', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+
+class DonorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Donor
+        fields = ['id', 'name', 'amount', 'message', 'is_anonymous', 'is_featured', 'created_at']
+        read_only_fields = ['created_at']
+
+
+class PublicDonorSerializer(serializers.ModelSerializer):
+    """Serializer for public-facing donors (only featured ones, with anonymous handling)"""
+    display_name = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Donor
+        fields = ['id', 'display_name', 'amount', 'message', 'created_at']
+        read_only_fields = ['created_at']
+    
+    def get_display_name(self, obj):
+        return "Anonymous" if obj.is_anonymous else obj.name

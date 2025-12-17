@@ -6,10 +6,12 @@ import api from '../config/api';
 const Home = () => {
   const { settings } = useSettings();
   const [reviews, setReviews] = useState([]);
+  const [donors, setDonors] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchFeaturedReviews();
+    fetchDonorFeed();
   }, []);
 
   const fetchFeaturedReviews = async () => {
@@ -30,6 +32,22 @@ const Home = () => {
       setReviews([]); // Set to empty array on error
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchDonorFeed = async () => {
+    try {
+      const response = await api.get('/donors/feed/');
+      const donorsData = response.data;
+      if (Array.isArray(donorsData)) {
+        setDonors(donorsData);
+      } else if (donorsData && Array.isArray(donorsData.results)) {
+        setDonors(donorsData.results);
+      } else {
+        setDonors([]);
+      }
+    } catch (error) {
+      setDonors([]);
     }
   };
 
@@ -254,6 +272,41 @@ const Home = () => {
           )}
         </div>
       </section>
+
+      {/* Donor Feed Section */}
+      {donors.length > 0 && (
+        <section className="section donor-feed-section" style={{ backgroundColor: '#F9F9F9' }}>
+          <div className="container">
+            <h2 className="section-title" style={{ color: settings.primary_color }}>
+              Recent Donations
+            </h2>
+            <div className="donor-feed">
+              {donors.slice(0, 10).map((donor) => (
+                <div key={donor.id} className="donor-item">
+                  <div className="donor-content">
+                    <span className="donor-name" style={{ color: settings.accent_color, fontWeight: 'bold' }}>
+                      {donor.display_name}
+                    </span>
+                    {donor.amount && (
+                      <span className="donor-amount" style={{ color: settings.primary_color }}>
+                        {' '}donated ${parseFloat(donor.amount).toFixed(2)}
+                      </span>
+                    )}
+                    {donor.message && (
+                      <span className="donor-message" style={{ color: settings.secondary_color }}>
+                        {' '}- {donor.message}
+                      </span>
+                    )}
+                  </div>
+                  <span className="donor-date" style={{ color: settings.secondary_color }}>
+                    {new Date(donor.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Call to Action */}
       <section className="section cta-section" style={{ backgroundColor: settings.accent_color }}>

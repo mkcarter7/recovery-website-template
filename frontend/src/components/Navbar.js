@@ -87,6 +87,15 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
+              <Link 
+                to="/donate" 
+                className={isActive('/donate') ? 'active' : ''}
+                onClick={() => setIsOpen(false)}
+              >
+                Donate
+              </Link>
+            </li>
+            <li>
               <a 
                 href="/admin"
                 className={isActive('/admin') ? 'active' : ''}
