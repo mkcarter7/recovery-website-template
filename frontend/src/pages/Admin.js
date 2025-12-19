@@ -272,7 +272,6 @@ const Admin = () => {
             <h1>Admin Panel</h1>
           </div>
           <div className="admin-header-actions">
-            <span>Welcome, {currentUser?.email}</span>
             <button onClick={handleLogout} className="btn btn-outline">Logout</button>
           </div>
         </div>
