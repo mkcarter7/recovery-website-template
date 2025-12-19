@@ -68,4 +68,3 @@ class DonorAdmin(admin.ModelAdmin):
     list_filter = ['is_featured', 'is_anonymous', 'created_at']
     search_fields = ['name', 'message']
     readonly_fields = ['created_at']
-
