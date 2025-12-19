@@ -1,34 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSettings } from '../contexts/SettingsContext';
-import api from '../config/api';
 
 const Donate = () => {
   const { settings } = useSettings();
-  const [wishlists, setWishlists] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchWishLists();
-  }, []);
-
-  const fetchWishLists = async () => {
-    try {
-      const response = await api.get('/wishlists/');
-      const wishlistsData = response.data;
-      if (Array.isArray(wishlistsData)) {
-        setWishlists(wishlistsData);
-      } else if (wishlistsData && Array.isArray(wishlistsData.results)) {
-        setWishlists(wishlistsData.results);
-      } else {
-        setWishlists([]);
-      }
-    } catch (error) {
-      console.error('Error fetching wish lists:', error);
-      setWishlists([]);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="donate-page">
@@ -46,34 +20,23 @@ const Donate = () => {
           <div className="donate-grid">
             <div className="donate-card">
               <div className="donate-icon">🎁</div>
-              <h2>Amazon Wishlists</h2>
+              <h2>Amazon Wishlist</h2>
               <p>
-                Help us by purchasing items from our Amazon Wishlists. These items directly support our programs and residents.
+                Help us by purchasing items from our Amazon Wishlist. These items directly support our programs and residents.
               </p>
-              {loading ? (
-                <p className="no-wishlist">Loading wishlists...</p>
-              ) : wishlists.length > 0 ? (
-                <div className="wishlists-list">
-                  {wishlists.map((wishlist) => (
-                    <div key={wishlist.id} className="wishlist-item">
-                      {wishlist.description && (
-                        <p className="wishlist-description">{wishlist.description}</p>
-                      )}
-                      <a 
-                        href={wishlist.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="btn btn-primary"
-                        style={{ backgroundColor: settings.accent_color }}
-                      >
-                        View {wishlist.name} on Amazon
-                      </a>
-                    </div>
-                  ))}
-                </div>
+              {settings.amazon_wishlist_url ? (
+                <a 
+                  href={settings.amazon_wishlist_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                  style={{ backgroundColor: settings.accent_color }}
+                >
+                  View Wishlist on Amazon
+                </a>
               ) : (
                 <p className="no-wishlist">
-                  Wishlists will be available soon. Please check back later.
+                  Wishlist URL will be available soon. Please check back later.
                 </p>
               )}
             </div>

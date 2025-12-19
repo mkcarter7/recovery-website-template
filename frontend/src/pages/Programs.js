@@ -133,6 +133,15 @@ const Programs = () => {
               No housing options available at this time.
             </p>
           )}
+          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+            <Link 
+              to="/housing-application" 
+              className="btn btn-primary"
+              style={{ backgroundColor: settings.accent_color }}
+            >
+              Apply for Housing
+            </Link>
+          </div>
         </div>
       </section>
 

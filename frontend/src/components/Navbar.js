@@ -88,11 +88,11 @@ const Navbar = () => {
             </li>
             <li>
               <Link 
-                to="/donate" 
-                className={isActive('/donate') ? 'active' : ''}
+                to="/sponsor" 
+                className={isActive('/sponsor') ? 'active' : ''}
                 onClick={() => setIsOpen(false)}
               >
-                Donate
+                Sponsor
               </Link>
             </li>
             <li>

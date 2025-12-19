@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     ContactFormViewSet, ReviewViewSet, ProgramViewSet,
-    HousingViewSet, SiteSettingsViewSet, AmazonWishListViewSet, DonorViewSet
+    HousingViewSet, SiteSettingsViewSet, AmazonWishListViewSet, DonorViewSet,
+    HousingApplicationViewSet
 )
 
 router = DefaultRouter()
@@ -13,6 +14,7 @@ router.register(r'housing', HousingViewSet, basename='housing')
 router.register(r'settings', SiteSettingsViewSet, basename='settings')
 router.register(r'wishlists', AmazonWishListViewSet, basename='wishlist')
 router.register(r'donors', DonorViewSet, basename='donor')
+router.register(r'housing-applications', HousingApplicationViewSet, basename='housingapplication')
 
 urlpatterns = [
     path('', include(router.urls)),

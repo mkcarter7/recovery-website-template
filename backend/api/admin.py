@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContactForm, Review, Program, Housing, SiteSettings, AmazonWishList, Donor
+from .models import ContactForm, Review, Program, Housing, SiteSettings, AmazonWishList, Donor, HousingApplication
 
 
 @admin.register(ContactForm)
@@ -68,3 +68,27 @@ class DonorAdmin(admin.ModelAdmin):
     list_filter = ['is_featured', 'is_anonymous', 'created_at']
     search_fields = ['name', 'message']
     readonly_fields = ['created_at']
+
+
+@admin.register(HousingApplication)
+class HousingApplicationAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'email', 'phone', 'preferred_housing', 'status', 'submitted_at']
+    list_filter = ['status', 'submitted_at', 'preferred_housing']
+    search_fields = ['first_name', 'last_name', 'email', 'phone']
+    readonly_fields = ['submitted_at']
+    fieldsets = (
+        ('Personal Information', {
+            'fields': ('first_name', 'last_name', 'email', 'phone', 'date_of_birth',
+                      'emergency_contact_name', 'emergency_contact_phone')
+        }),
+        ('Application Details', {
+            'fields': ('preferred_housing', 'move_in_date', 'current_address',
+                      'reason_for_applying', 'special_needs')
+        }),
+        ('Additional Information', {
+            'fields': ('employment_status', 'income_source', 'previous_treatment', 'additional_info')
+        }),
+        ('Status', {
+            'fields': ('status', 'notes', 'submitted_at')
+        }),
+    )

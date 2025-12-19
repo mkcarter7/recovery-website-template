@@ -155,3 +155,48 @@ class Donor(models.Model):
         display_name = "Anonymous" if self.is_anonymous else self.name
         amount_str = f" - ${self.amount}" if self.amount else ""
         return f"{display_name}{amount_str} - {self.created_at.strftime('%Y-%m-%d')}"
+
+
+class HousingApplication(models.Model):
+    """Housing application form submissions"""
+    STATUS_CHOICES = [
+        ('new', 'New'),
+        ('reviewing', 'Reviewing'),
+        ('approved', 'Approved'),
+        ('denied', 'Denied'),
+        ('waitlisted', 'Waitlisted'),
+    ]
+    
+    # Personal Information
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    date_of_birth = models.DateField(null=True, blank=True)
+    emergency_contact_name = models.CharField(max_length=200, blank=True)
+    emergency_contact_phone = models.CharField(max_length=20, blank=True)
+    
+    # Application Details
+    preferred_housing = models.ForeignKey(Housing, on_delete=models.SET_NULL, null=True, blank=True, help_text="Preferred housing option")
+    move_in_date = models.DateField(null=True, blank=True)
+    current_address = models.TextField(blank=True)
+    reason_for_applying = models.TextField(help_text="Why are you applying for housing?")
+    special_needs = models.TextField(blank=True, help_text="Any special needs or accommodations required")
+    
+    # Additional Information
+    employment_status = models.CharField(max_length=100, blank=True)
+    income_source = models.CharField(max_length=200, blank=True)
+    previous_treatment = models.TextField(blank=True, help_text="Previous treatment history")
+    additional_info = models.TextField(blank=True, help_text="Any additional information")
+    
+    # Status Tracking
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(blank=True, help_text="Admin notes")
+    
+    class Meta:
+        ordering = ['-submitted_at']
+        verbose_name_plural = "Housing Applications"
+    
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.submitted_at.strftime('%Y-%m-%d')}"

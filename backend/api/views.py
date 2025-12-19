@@ -3,11 +3,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from .models import ContactForm, Review, Program, Housing, SiteSettings, AmazonWishList, Donor
+from .models import ContactForm, Review, Program, Housing, SiteSettings, AmazonWishList, Donor, HousingApplication
 from .serializers import (
     ContactFormSerializer, ReviewSerializer, PublicReviewSerializer,
     ProgramSerializer, HousingSerializer, SiteSettingsSerializer,
-    AmazonWishListSerializer, DonorSerializer, PublicDonorSerializer
+    AmazonWishListSerializer, DonorSerializer, PublicDonorSerializer,
+    HousingApplicationSerializer
 )
 
 
@@ -183,3 +184,26 @@ class DonorViewSet(viewsets.ModelViewSet):
         donors = Donor.objects.filter(is_featured=True).order_by('-created_at')[:20]
         serializer = PublicDonorSerializer(donors, many=True)
         return Response(serializer.data)
+
+
+class HousingApplicationViewSet(viewsets.ModelViewSet):
+    queryset = HousingApplication.objects.all()
+    serializer_class = HousingApplicationSerializer
+    
+    def get_permissions(self):
+        # Allow public access for create and submit actions
+        action_name = getattr(self, 'action', None)
+        path = self.request.path if hasattr(self.request, 'path') else ''
+        
+        # Check if this is a submit or create endpoint
+        if action_name in ['create', 'submit'] or 'submit' in path:
+            return [AllowAny()]
+        return [IsAuthenticated()]
+    
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def submit(self, request):
+        """Public endpoint for submitting housing applications"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -632,23 +632,23 @@
     font-size: 1.5rem;
   }
 }
-.donate-page {
+.sponsor-page {
   min-height: 100vh;
 }
 
-.donate-hero {
+.sponsor-hero {
   padding: 80px 0;
   text-align: center;
   background: linear-gradient(135deg, var(--accent-color, #DC143C) 0%, #B01030 100%);
 }
 
-.donate-hero h1 {
+.sponsor-hero h1 {
   font-size: 3rem;
   margin-bottom: 1rem;
   font-weight: 700;
 }
 
-.donate-subtitle {
+.sponsor-subtitle {
   font-size: 1.25rem;
   color: rgba(255, 255, 255, 0.95);
   max-width: 700px;
@@ -656,18 +656,18 @@
   line-height: 1.6;
 }
 
-.donate-content {
+.sponsor-content {
   padding: 60px 0;
 }
 
-.donate-grid {
+.sponsor-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-bottom: 4rem;
 }
 
-.donate-card {
+.sponsor-card {
   background: #FFFFFF;
   border-radius: 12px;
   padding: 2.5rem;
@@ -676,29 +676,29 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.donate-card:hover {
+.sponsor-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
-.donate-icon {
+.sponsor-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
 }
 
-.donate-card h2 {
+.sponsor-card h2 {
   font-size: 1.75rem;
   margin-bottom: 1rem;
   color: #333;
 }
 
-.donate-card p {
+.sponsor-card p {
   color: #666;
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
 
-.donate-card .btn {
+.sponsor-card .btn {
   display: inline-block;
   padding: 12px 30px;
   border-radius: 6px;
@@ -707,16 +707,16 @@
   transition: all 0.3s ease;
 }
 
-.donate-card .btn-primary {
+.sponsor-card .btn-primary {
   color: #FFFFFF;
 }
 
-.donate-card .btn-primary:hover {
+.sponsor-card .btn-primary:hover {
   opacity: 0.9;
   transform: scale(1.05);
 }
 
-.donate-card .btn-outline:hover {
+.sponsor-card .btn-outline:hover {
   background-color: var(--accent-color, #DC143C);
   color: #FFFFFF;
 }
@@ -729,20 +729,20 @@
   border-radius: 6px;
 }
 
-.donate-info {
+.sponsor-info {
   background: #f9f9f9;
   border-radius: 12px;
   padding: 3rem;
   text-align: center;
 }
 
-.donate-info h3 {
+.sponsor-info h3 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
   color: #333;
 }
 
-.donate-info > p {
+.sponsor-info > p {
   font-size: 1.1rem;
   color: #666;
   margin-bottom: 2rem;
@@ -782,32 +782,32 @@
 }
 
 @media (max-width: 768px) {
-  .donate-hero {
+  .sponsor-hero {
     padding: 60px 20px;
   }
 
-  .donate-hero h1 {
+  .sponsor-hero h1 {
     font-size: 2rem;
   }
 
-  .donate-subtitle {
+  .sponsor-subtitle {
     font-size: 1rem;
   }
 
-  .donate-grid {
+  .sponsor-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
-  .donate-card {
+  .sponsor-card {
     padding: 2rem;
   }
 
-  .donate-info {
+  .sponsor-info {
     padding: 2rem 1.5rem;
   }
 
-  .donate-info h3 {
+  .sponsor-info h3 {
     font-size: 1.5rem;
   }
 }

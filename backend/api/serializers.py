@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.conf import settings
-from .models import ContactForm, Review, Program, Housing, SiteSettings, AmazonWishList, Donor
+from .models import ContactForm, Review, Program, Housing, SiteSettings, AmazonWishList, Donor, HousingApplication
 
 
 class ContactFormSerializer(serializers.ModelSerializer):
@@ -127,3 +127,18 @@ class PublicDonorSerializer(serializers.ModelSerializer):
     
     def get_display_name(self, obj):
         return "Anonymous" if obj.is_anonymous else obj.name
+
+
+class HousingApplicationSerializer(serializers.ModelSerializer):
+    preferred_housing_name = serializers.CharField(source='preferred_housing.name', read_only=True)
+    
+    class Meta:
+        model = HousingApplication
+        fields = [
+            'id', 'first_name', 'last_name', 'email', 'phone', 'date_of_birth',
+            'emergency_contact_name', 'emergency_contact_phone', 'preferred_housing',
+            'preferred_housing_name', 'move_in_date', 'current_address',
+            'reason_for_applying', 'special_needs', 'employment_status', 'income_source',
+            'previous_treatment', 'additional_info', 'status', 'submitted_at', 'notes'
+        ]
+        read_only_fields = ['submitted_at']

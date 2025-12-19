@@ -274,16 +274,12 @@ const Home = () => {
       </section>
 
       {/* Donor Feed Section */}
-      <section className="section donor-feed-section" style={{ backgroundColor: '#F9F9F9' }}>
-        <div className="container">
-          <h2 className="section-title" style={{ color: settings.primary_color }}>
-            Recent Donations
-          </h2>
-          {loading ? (
-            <p style={{ textAlign: 'center', color: settings.secondary_color }}>
-              Loading donations...
-            </p>
-          ) : donors.length > 0 ? (
+      {donors.length > 0 && (
+        <section className="section donor-feed-section" style={{ backgroundColor: '#F9F9F9' }}>
+          <div className="container">
+            <h2 className="section-title" style={{ color: settings.primary_color }}>
+              Recent Donations
+            </h2>
             <div className="donor-feed">
               {donors.slice(0, 10).map((donor) => (
                 <div key={donor.id} className="donor-item">
@@ -293,7 +289,7 @@ const Home = () => {
                     </span>
                     {donor.amount && (
                       <span className="donor-amount" style={{ color: settings.primary_color }}>
-                        {' '}donated ${parseFloat(donor.amount).toFixed(2)}
+                        {' '}sponsored ${parseFloat(donor.amount).toFixed(2)}
                       </span>
                     )}
                     {donor.message && (
@@ -308,13 +304,9 @@ const Home = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            <p style={{ textAlign: 'center', color: settings.secondary_color }}>
-              No recent donations to display. Be the first to support our mission!
-            </p>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* Call to Action */}
       <section className="section cta-section" style={{ backgroundColor: settings.accent_color }}>

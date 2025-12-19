@@ -15,6 +15,7 @@ const Admin = () => {
   const [housing, setHousing] = useState([]);
   const [wishlists, setWishlists] = useState([]);
   const [donors, setDonors] = useState([]);
+  const [housingApplications, setHousingApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState(null);
   const [editingSettings, setEditingSettings] = useState(false);
@@ -27,13 +28,14 @@ const Admin = () => {
 
   const fetchAllData = async () => {
     try {
-      const [formsRes, reviewsRes, programsRes, housingRes, wishlistsRes, donorsRes] = await Promise.all([
+      const [formsRes, reviewsRes, programsRes, housingRes, wishlistsRes, donorsRes, applicationsRes] = await Promise.all([
         api.get('/contact-forms/'),
         api.get('/reviews/'),
         api.get('/programs/'),
         api.get('/housing/'),
         api.get('/wishlists/'),
         api.get('/donors/'),
+        api.get('/housing-applications/'),
       ]);
       // Handle paginated responses (DRF returns {results: [...]} when paginated)
       setContactForms(Array.isArray(formsRes.data) ? formsRes.data : (formsRes.data.results || []));
@@ -42,6 +44,7 @@ const Admin = () => {
       setHousing(Array.isArray(housingRes.data) ? housingRes.data : (housingRes.data.results || []));
       setWishlists(Array.isArray(wishlistsRes.data) ? wishlistsRes.data : (wishlistsRes.data.results || []));
       setDonors(Array.isArray(donorsRes.data) ? donorsRes.data : (donorsRes.data.results || []));
+      setHousingApplications(Array.isArray(applicationsRes.data) ? applicationsRes.data : (applicationsRes.data.results || []));
     } catch (error) {
       // Set empty arrays on error to prevent map errors
       setContactForms([]);
@@ -50,6 +53,7 @@ const Admin = () => {
       setHousing([]);
       setWishlists([]);
       setDonors([]);
+      setHousingApplications([]);
     } finally {
       setLoading(false);
     }
@@ -246,6 +250,27 @@ const Admin = () => {
     }
   };
 
+  const handleDeleteHousingApplication = async (id) => {
+    if (window.confirm('Are you sure you want to delete this housing application?')) {
+      try {
+        await api.delete(`/housing-applications/${id}/`);
+        setHousingApplications(housingApplications.filter(app => app.id !== id));
+      } catch (error) {
+        alert('Error deleting housing application');
+      }
+    }
+  };
+
+  const handleUpdateHousingApplication = async (id, data) => {
+    try {
+      const response = await api.patch(`/housing-applications/${id}/`, data);
+      setHousingApplications(housingApplications.map(app => app.id === id ? response.data : app));
+      setEditingItem(null);
+    } catch (error) {
+      alert('Error updating housing application');
+    }
+  };
+
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {
@@ -272,6 +297,7 @@ const Admin = () => {
             <h1>Admin Panel</h1>
           </div>
           <div className="admin-header-actions">
+            <span>Welcome, {currentUser?.email}</span>
             <button onClick={handleLogout} className="btn btn-outline">Logout</button>
           </div>
         </div>
@@ -314,6 +340,12 @@ const Admin = () => {
             onClick={() => setActiveTab('donors')}
           >
             Donors
+          </button>
+          <button 
+            className={activeTab === 'applications' ? 'active' : ''}
+            onClick={() => setActiveTab('applications')}
+          >
+            Housing Applications
           </button>
           <button 
             className={activeTab === 'settings' ? 'active' : ''}
@@ -386,6 +418,16 @@ const Admin = () => {
               onDelete={handleDeleteDonor}
               onUpdate={handleUpdateDonor}
               onCreate={handleCreateDonor}
+              editingItem={editingItem}
+              setEditingItem={setEditingItem}
+            />
+          )}
+
+          {activeTab === 'applications' && (
+            <HousingApplicationsTab 
+              applications={housingApplications}
+              onDelete={handleDeleteHousingApplication}
+              onUpdate={handleUpdateHousingApplication}
               editingItem={editingItem}
               setEditingItem={setEditingItem}
             />
@@ -1647,6 +1689,107 @@ const DonorsTab = ({ donors, onDelete, onUpdate, onCreate, editingItem, setEditi
           </tbody>
         </table>
       </div>
+    </div>
+  );
+};
+
+// Housing Applications Tab Component
+const HousingApplicationsTab = ({ applications, onDelete, onUpdate, editingItem, setEditingItem }) => {
+  const [formData, setFormData] = useState({});
+
+  const handleEdit = (application) => {
+    setEditingItem(application.id);
+    setFormData({
+      status: application.status,
+      notes: application.notes || '',
+    });
+  };
+
+  const handleSave = (id) => {
+    onUpdate(id, formData);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString();
+  };
+
+  const applicationsArray = Array.isArray(applications) ? applications : [];
+
+  return (
+    <div className="admin-tab-content">
+      <h2>Housing Applications ({applicationsArray.length})</h2>
+      <div className="admin-table-wrapper">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Preferred Housing</th>
+              <th>Move-In Date</th>
+              <th>Status</th>
+              <th>Submitted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {applicationsArray.map(application => (
+              <tr key={application.id}>
+                {editingItem === application.id ? (
+                  <>
+                    <td>{application.first_name} {application.last_name}</td>
+                    <td>{application.email}</td>
+                    <td>{application.phone}</td>
+                    <td>{application.preferred_housing_name || 'N/A'}</td>
+                    <td>{formatDate(application.move_in_date)}</td>
+                    <td>
+                      <select 
+                        value={formData.status}
+                        onChange={(e) => setFormData({...formData, status: e.target.value})}
+                      >
+                        <option value="new">New</option>
+                        <option value="reviewing">Reviewing</option>
+                        <option value="approved">Approved</option>
+                        <option value="denied">Denied</option>
+                        <option value="waitlisted">Waitlisted</option>
+                      </select>
+                    </td>
+                    <td>{formatDate(application.submitted_at)}</td>
+                    <td>
+                      <button onClick={() => handleSave(application.id)} className="btn btn-sm">Save</button>
+                      <button onClick={() => setEditingItem(null)} className="btn btn-sm btn-outline">Cancel</button>
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td>{application.first_name} {application.last_name}</td>
+                    <td>{application.email}</td>
+                    <td>{application.phone}</td>
+                    <td>{application.preferred_housing_name || 'N/A'}</td>
+                    <td>{formatDate(application.move_in_date)}</td>
+                    <td>
+                      <span className={`status-badge status-${application.status}`}>
+                        {application.status}
+                      </span>
+                    </td>
+                    <td>{formatDate(application.submitted_at)}</td>
+                    <td>
+                      <button onClick={() => handleEdit(application)} className="btn btn-sm">Edit</button>
+                      <button onClick={() => onDelete(application.id)} className="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {applicationsArray.length === 0 && (
+        <p style={{ textAlign: 'center', color: '#666', marginTop: '2rem' }}>
+          No housing applications submitted yet.
+        </p>
+      )}
     </div>
   );
 };
