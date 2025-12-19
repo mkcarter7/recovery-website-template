@@ -22,11 +22,17 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-produc
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Allow Railway domain and custom domain
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app', '2ndchancerecovery.life', 'www.2ndchancerecovery.life']
 if config('RAILWAY_PUBLIC_DOMAIN', default=None):
     ALLOWED_HOSTS.append(config('RAILWAY_PUBLIC_DOMAIN'))
 if config('CUSTOM_DOMAIN', default=None):
-    ALLOWED_HOSTS.append(config('CUSTOM_DOMAIN'))
+    custom_domain = config('CUSTOM_DOMAIN').strip()
+    ALLOWED_HOSTS.append(custom_domain)
+    # Also add www version if not already included
+    if custom_domain.startswith('www.'):
+        ALLOWED_HOSTS.append(custom_domain.replace('www.', ''))
+    else:
+        ALLOWED_HOSTS.append(f'www.{custom_domain}')
 
 # Application definition
 INSTALLED_APPS = [
@@ -176,10 +182,24 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    'https://2ndchancerecovery.life',
+    'https://www.2ndchancerecovery.life',
+]
+if config('CUSTOM_DOMAIN', default=None):
+    custom_domain = config('CUSTOM_DOMAIN').strip()
+    if not custom_domain.startswith(('http://', 'https://')):
+        CSRF_TRUSTED_ORIGINS.append(f'https://{custom_domain}')
+        if not custom_domain.startswith('www.'):
+            CSRF_TRUSTED_ORIGINS.append(f'https://www.{custom_domain}')
+
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://2ndchancerecovery.life",
+    "https://www.2ndchancerecovery.life",
 ]
 # Add Railway frontend domain if set
 if config('FRONTEND_URL', default=None):
@@ -188,6 +208,13 @@ if config('FRONTEND_URL', default=None):
     if frontend_url and not frontend_url.startswith(('http://', 'https://')):
         frontend_url = f'https://{frontend_url}'
     CORS_ALLOWED_ORIGINS.append(frontend_url)
+# Add custom domain if set
+if config('CUSTOM_DOMAIN', default=None):
+    custom_domain = config('CUSTOM_DOMAIN').strip()
+    if not custom_domain.startswith(('http://', 'https://')):
+        CORS_ALLOWED_ORIGINS.append(f'https://{custom_domain}')
+        if not custom_domain.startswith('www.'):
+            CORS_ALLOWED_ORIGINS.append(f'https://www.{custom_domain}')
 # Add additional allowed origins from environment variable (comma-separated)
 if config('CORS_ALLOWED_ORIGINS', default=None):
     additional_origins = []
