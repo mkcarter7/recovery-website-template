@@ -1,1 +1,1 @@
-web: gunicorn recovery_center.wsgi --log-file -
+web: gunicorn recovery_center.wsgi:application --bind 0.0.0.0:$PORT
