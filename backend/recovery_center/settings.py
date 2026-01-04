@@ -22,7 +22,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-produc
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Allow Railway domain and custom domain
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app', '2ndchancerecovery.life', 'www.2ndchancerecovery.life']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app', 'cleanandsoberhome.com', 'www.cleanandsoberhome.com']
 if config('RAILWAY_PUBLIC_DOMAIN', default=None):
     ALLOWED_HOSTS.append(config('RAILWAY_PUBLIC_DOMAIN'))
 if config('CUSTOM_DOMAIN', default=None):
@@ -184,8 +184,8 @@ REST_FRAMEWORK = {
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
-    'https://2ndchancerecovery.life',
-    'https://www.2ndchancerecovery.life',
+    'https://cleanandsoberhome.com',
+    'https://www.cleanandsoberhome.com',
 ]
 if config('CUSTOM_DOMAIN', default=None):
     custom_domain = config('CUSTOM_DOMAIN').strip()
@@ -198,8 +198,8 @@ if config('CUSTOM_DOMAIN', default=None):
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://2ndchancerecovery.life",
-    "https://www.2ndchancerecovery.life",
+    "https://cleanandsoberhome.com",
+    "https://www.cleanandsoberhome.com",
 ]
 # Add Railway frontend domain if set
 if config('FRONTEND_URL', default=None):

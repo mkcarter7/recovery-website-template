@@ -1,6 +1,6 @@
-# Setting Up Custom Domain (2ndchancerecovery.life) on Railway
+# Setting Up Custom Domain (cleanandsoberhome.com) on Railway
 
-This guide will help you connect your GoDaddy domain `www.2ndchancerecovery.life` to your Railway-deployed website.
+This guide will help you connect your GoDaddy domain `www.cleanandsoberhome.com` to your Railway-deployed website.
 
 ## Step 1: Add Custom Domain in Railway
 
@@ -10,7 +10,7 @@ This guide will help you connect your GoDaddy domain `www.2ndchancerecovery.life
 3. Go to the **Settings** tab
 4. Scroll down to **Networking** section
 5. Click **"Generate Domain"** or **"Add Custom Domain"**
-6. Enter: `www.2ndchancerecovery.life`
+6. Enter: `www.cleanandsoberhome.com`
 7. Railway will provide you with DNS records (CNAME or A record)
 
 ### For Backend Service:
@@ -18,7 +18,7 @@ This guide will help you connect your GoDaddy domain `www.2ndchancerecovery.life
 2. Go to the **Settings** tab
 3. Scroll down to **Networking** section
 4. Click **"Generate Domain"** or **"Add Custom Domain"**
-5. Enter: `api.2ndchancerecovery.life` (optional, or use subdomain)
+5. Enter: `api.cleanandsoberhome.com` (optional, or use subdomain)
 6. Note the DNS records provided
 
 **Important:** Railway will provide you with either:
@@ -29,24 +29,24 @@ This guide will help you connect your GoDaddy domain `www.2ndchancerecovery.life
 
 1. Log in to your **GoDaddy account**
 2. Go to **My Products** → **Domains**
-3. Click on **2ndchancerecovery.life**
+3. Click on **cleanandsoberhome.com**
 4. Click **"DNS"** or **"Manage DNS"**
 
 ### Add/Update DNS Records:
 
-#### For www.2ndchancerecovery.life (Frontend):
+#### For www.cleanandsoberhome.com (Frontend):
 - **Type:** CNAME (if Railway provides CNAME) or A (if Railway provides IP)
 - **Name:** `www`
 - **Value:** The value Railway provided (either a domain like `xxxx.up.railway.app` or an IP address)
 - **TTL:** 600 (or default)
 
-#### For 2ndchancerecovery.life (Root domain - optional):
+#### For cleanandsoberhome.com (Root domain - optional):
 - **Type:** CNAME or A
 - **Name:** `@` (or leave blank, depending on GoDaddy's interface)
-- **Value:** Same as www record, or point to `www.2ndchancerecovery.life`
+- **Value:** Same as www record, or point to `www.cleanandsoberhome.com`
 - **TTL:** 600
 
-#### For api.2ndchancerecovery.life (Backend - if you set it up):
+#### For api.cleanandsoberhome.com (Backend - if you set it up):
 - **Type:** CNAME or A
 - **Name:** `api`
 - **Value:** The backend Railway domain/IP
@@ -56,7 +56,7 @@ This guide will help you connect your GoDaddy domain `www.2ndchancerecovery.life
 ```
 Type    Name    Value                          TTL
 CNAME   www     xxxx-production.up.railway.app  600
-CNAME   @       www.2ndchancerecovery.life      600
+CNAME   @       www.cleanandsoberhome.com       600
 ```
 
 ## Step 3: Update Railway Environment Variables
@@ -67,7 +67,7 @@ Add/update these environment variables:
 
 ### Backend Service:
 Add/update these environment variables:
-- `CUSTOM_DOMAIN` = `www.2ndchancerecovery.life` (optional, but recommended)
+- `CUSTOM_DOMAIN` = `www.cleanandsoberhome.com` (optional, but recommended)
 
 ## Step 4: Wait for DNS Propagation
 
@@ -127,6 +127,5 @@ Railway automatically provisions SSL certificates via Let's Encrypt. Once DNS is
 
 Once everything is working:
 1. The old GoDaddy website builder site can be disabled/deleted
-2. All traffic to `www.2ndchancerecovery.life` will go to your Railway-deployed site
+2. All traffic to `www.cleanandsoberhome.com` will go to your Railway-deployed site
 3. Monitor Railway logs and metrics to ensure everything is running smoothly
-

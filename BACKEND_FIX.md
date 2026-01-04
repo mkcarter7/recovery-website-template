@@ -111,4 +111,3 @@ If you're still having issues:
    - Missing environment variables
    - Database connection problems
    - Code errors (syntax/import errors)
-
