@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSettings } from '../contexts/SettingsContext';
+import logoImage from '../assets/logo.jpg';
 import './Footer.css';
 
 const Footer = () => {
@@ -16,7 +17,18 @@ const Footer = () => {
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
-            <h3>{settings.site_name}</h3>
+            <h3 className="footer-logo-container">
+              <img 
+                src={logoImage}
+                alt="" 
+                className="footer-logo-img"
+                onError={(e) => {
+                  console.error('Logo failed to load:', e.target.src);
+                  e.target.style.display = 'none';
+                }}
+              />
+              <span>{settings.site_name}</span>
+            </h3>
             <p>{settings.hero_subtitle}</p>
             {hasSocialMedia && (
               <div className="social-media-links">

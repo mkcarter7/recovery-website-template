@@ -18,6 +18,20 @@
   color: #DC143C;
 }
 
+.footer-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.footer-logo-img {
+  height: 35px;
+  width: auto;
+  max-width: 150px;
+  object-fit: contain;
+  display: block;
+}
+
 .footer-section p {
   margin-bottom: 0.5rem;
   color: #808080;
@@ -122,6 +136,15 @@
     padding: 0 1rem;
   }
   
+  .footer-logo-container {
+    justify-content: center;
+  }
+  
+  .footer-logo-img {
+    height: 32px;
+    max-width: 130px;
+  }
+  
   .footer-bottom {
     padding-top: 1.5rem;
     font-size: 0.9rem;
@@ -140,6 +163,15 @@
   .footer-section h3,
   .footer-section h4 {
     font-size: 1rem;
+  }
+  
+  .footer-logo-container {
+    justify-content: center;
+  }
+  
+  .footer-logo-img {
+    height: 30px;
+    max-width: 120px;
   }
   
   .footer-section p,
