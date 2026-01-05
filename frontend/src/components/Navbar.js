@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSettings } from '../contexts/SettingsContext';
+import logoImage from '../assets/logo.jpg';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -37,7 +38,7 @@ const Navbar = () => {
         <div className="navbar-content">
           <Link to="/" className="navbar-logo">
             <img 
-              src="/logo.jpg" 
+              src={logoImage}
               alt="" 
               className="navbar-logo-img"
               onError={(e) => {
