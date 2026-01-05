@@ -36,7 +36,15 @@ const Navbar = () => {
       <div className="container">
         <div className="navbar-content">
           <Link to="/" className="navbar-logo">
-            <img src="/logo.jpg" alt={settings.site_name} className="navbar-logo-img" />
+            <img 
+              src={`${process.env.PUBLIC_URL || ''}/logo.jpg`} 
+              alt={settings.site_name} 
+              className="navbar-logo-img"
+              onError={(e) => {
+                console.error('Logo failed to load:', e.target.src);
+                e.target.style.display = 'none';
+              }}
+            />
           </Link>
           
           <button 

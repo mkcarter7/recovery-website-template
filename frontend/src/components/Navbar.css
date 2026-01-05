@@ -28,7 +28,9 @@
 .navbar-logo-img {
   height: 40px;
   width: auto;
+  max-width: 200px;
   object-fit: contain;
+  display: block;
 }
 
 .navbar-menu {
