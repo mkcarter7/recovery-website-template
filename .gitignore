@@ -63,3 +63,6 @@ desktop.ini
 
 # Internal documentation (not for public GitHub)
 PROJECT_DETAILS.md
+# Ignore all .md files except README.md
+*.md
+!README.md
