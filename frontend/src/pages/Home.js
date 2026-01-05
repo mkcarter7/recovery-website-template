@@ -6,12 +6,12 @@ import api from '../config/api';
 const Home = () => {
   const { settings } = useSettings();
   const [reviews, setReviews] = useState([]);
-  const [donors, setDonors] = useState([]);
+  const [sponsors, setSponsors] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchFeaturedReviews();
-    fetchDonorFeed();
+    fetchSponsorFeed();
   }, []);
 
   const fetchFeaturedReviews = async () => {
@@ -35,19 +35,19 @@ const Home = () => {
     }
   };
 
-  const fetchDonorFeed = async () => {
+  const fetchSponsorFeed = async () => {
     try {
       const response = await api.get('/donors/feed/');
-      const donorsData = response.data;
-      if (Array.isArray(donorsData)) {
-        setDonors(donorsData);
-      } else if (donorsData && Array.isArray(donorsData.results)) {
-        setDonors(donorsData.results);
+      const sponsorsData = response.data;
+      if (Array.isArray(sponsorsData)) {
+        setSponsors(sponsorsData);
+      } else if (sponsorsData && Array.isArray(sponsorsData.results)) {
+        setSponsors(sponsorsData.results);
       } else {
-        setDonors([]);
+        setSponsors([]);
       }
     } catch (error) {
-      setDonors([]);
+      setSponsors([]);
     }
   };
 
@@ -273,33 +273,33 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Donor Feed Section */}
-      {donors.length > 0 && (
-        <section className="section donor-feed-section" style={{ backgroundColor: '#F9F9F9' }}>
+      {/* Sponsor Feed Section */}
+      {sponsors.length > 0 && (
+        <section className="section sponsor-feed-section" style={{ backgroundColor: '#F9F9F9' }}>
           <div className="container">
             <h2 className="section-title" style={{ color: settings.primary_color }}>
-              Recent Donations
+              Recent Sponsorships
             </h2>
-            <div className="donor-feed">
-              {donors.slice(0, 10).map((donor) => (
-                <div key={donor.id} className="donor-item">
-                  <div className="donor-content">
-                    <span className="donor-name" style={{ color: settings.accent_color, fontWeight: 'bold' }}>
-                      {donor.display_name}
+            <div className="sponsor-feed">
+              {sponsors.slice(0, 10).map((sponsor) => (
+                <div key={sponsor.id} className="sponsor-item">
+                  <div className="sponsor-content">
+                    <span className="sponsor-name" style={{ color: settings.accent_color, fontWeight: 'bold' }}>
+                      {sponsor.display_name}
                     </span>
-                    {donor.amount && (
-                      <span className="donor-amount" style={{ color: settings.primary_color }}>
-                        {' '}sponsored ${parseFloat(donor.amount).toFixed(2)}
+                    {sponsor.amount && (
+                      <span className="sponsor-amount" style={{ color: settings.primary_color }}>
+                        {' '}sponsored ${parseFloat(sponsor.amount).toFixed(2)}
                       </span>
                     )}
-                    {donor.message && (
-                      <span className="donor-message" style={{ color: settings.secondary_color }}>
-                        {' '}- {donor.message}
+                    {sponsor.message && (
+                      <span className="sponsor-message" style={{ color: settings.secondary_color }}>
+                        {' '}- {sponsor.message}
                       </span>
                     )}
                   </div>
-                  <span className="donor-date" style={{ color: settings.secondary_color }}>
-                    {new Date(donor.created_at).toLocaleDateString()}
+                  <span className="sponsor-date" style={{ color: settings.secondary_color }}>
+                    {new Date(sponsor.created_at).toLocaleDateString()}
                   </span>
                 </div>
               ))}

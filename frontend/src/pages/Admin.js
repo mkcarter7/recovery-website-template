@@ -14,7 +14,7 @@ const Admin = () => {
   const [programs, setPrograms] = useState([]);
   const [housing, setHousing] = useState([]);
   const [wishlists, setWishlists] = useState([]);
-  const [donors, setDonors] = useState([]);
+  const [sponsors, setSponsors] = useState([]);
   const [housingApplications, setHousingApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState(null);
@@ -28,7 +28,7 @@ const Admin = () => {
 
   const fetchAllData = async () => {
     try {
-      const [formsRes, reviewsRes, programsRes, housingRes, wishlistsRes, donorsRes, applicationsRes] = await Promise.all([
+      const [formsRes, reviewsRes, programsRes, housingRes, wishlistsRes, sponsorsRes, applicationsRes] = await Promise.all([
         api.get('/contact-forms/'),
         api.get('/reviews/'),
         api.get('/programs/'),
@@ -43,7 +43,7 @@ const Admin = () => {
       setPrograms(Array.isArray(programsRes.data) ? programsRes.data : (programsRes.data.results || []));
       setHousing(Array.isArray(housingRes.data) ? housingRes.data : (housingRes.data.results || []));
       setWishlists(Array.isArray(wishlistsRes.data) ? wishlistsRes.data : (wishlistsRes.data.results || []));
-      setDonors(Array.isArray(donorsRes.data) ? donorsRes.data : (donorsRes.data.results || []));
+      setSponsors(Array.isArray(sponsorsRes.data) ? sponsorsRes.data : (sponsorsRes.data.results || []));
       setHousingApplications(Array.isArray(applicationsRes.data) ? applicationsRes.data : (applicationsRes.data.results || []));
     } catch (error) {
       // Set empty arrays on error to prevent map errors
@@ -52,7 +52,7 @@ const Admin = () => {
       setPrograms([]);
       setHousing([]);
       setWishlists([]);
-      setDonors([]);
+      setSponsors([]);
       setHousingApplications([]);
     } finally {
       setLoading(false);
@@ -219,34 +219,34 @@ const Admin = () => {
     }
   };
 
-  const handleDeleteDonor = async (id) => {
-    if (window.confirm('Are you sure you want to delete this donor entry?')) {
+  const handleDeleteSponsor = async (id) => {
+    if (window.confirm('Are you sure you want to delete this sponsor entry?')) {
       try {
         await api.delete(`/donors/${id}/`);
-        setDonors(donors.filter(d => d.id !== id));
+        setSponsors(sponsors.filter(d => d.id !== id));
       } catch (error) {
-        alert('Error deleting donor');
+        alert('Error deleting sponsor');
       }
     }
   };
 
-  const handleUpdateDonor = async (id, data) => {
+  const handleUpdateSponsor = async (id, data) => {
     try {
       const response = await api.patch(`/donors/${id}/`, data);
-      setDonors(donors.map(d => d.id === id ? response.data : d));
+      setSponsors(sponsors.map(d => d.id === id ? response.data : d));
       setEditingItem(null);
     } catch (error) {
-      alert('Error updating donor');
+      alert('Error updating sponsor');
     }
   };
 
-  const handleCreateDonor = async (data) => {
+  const handleCreateSponsor = async (data) => {
     try {
       const response = await api.post('/donors/', data);
-      setDonors([...donors, response.data]);
+      setSponsors([...sponsors, response.data]);
       setEditingItem(null);
     } catch (error) {
-      alert('Error creating donor');
+      alert('Error creating sponsor');
     }
   };
 
@@ -336,10 +336,10 @@ const Admin = () => {
             Wish Lists
           </button>
           <button 
-            className={activeTab === 'donors' ? 'active' : ''}
-            onClick={() => setActiveTab('donors')}
+            className={activeTab === 'sponsors' ? 'active' : ''}
+            onClick={() => setActiveTab('sponsors')}
           >
-            Donors
+            Sponsors
           </button>
           <button 
             className={activeTab === 'applications' ? 'active' : ''}
@@ -412,12 +412,12 @@ const Admin = () => {
             />
           )}
 
-          {activeTab === 'donors' && (
-            <DonorsTab 
-              donors={donors}
-              onDelete={handleDeleteDonor}
-              onUpdate={handleUpdateDonor}
-              onCreate={handleCreateDonor}
+          {activeTab === 'sponsors' && (
+            <SponsorsTab 
+              sponsors={sponsors}
+              onDelete={handleDeleteSponsor}
+              onUpdate={handleUpdateSponsor}
+              onCreate={handleCreateSponsor}
               editingItem={editingItem}
               setEditingItem={setEditingItem}
             />
@@ -1514,18 +1514,18 @@ const WishListsTab = ({ wishlists, onDelete, onUpdate, onCreate, editingItem, se
   );
 };
 
-// Donors Tab Component
-const DonorsTab = ({ donors, onDelete, onUpdate, onCreate, editingItem, setEditingItem }) => {
+// Sponsors Tab Component
+const SponsorsTab = ({ sponsors, onDelete, onUpdate, onCreate, editingItem, setEditingItem }) => {
   const [formData, setFormData] = useState({});
 
-  const handleEdit = (donor) => {
-    setEditingItem(donor.id);
+  const handleEdit = (sponsor) => {
+    setEditingItem(sponsor.id);
     setFormData({
-      name: donor.name,
-      amount: donor.amount || '',
-      message: donor.message || '',
-      is_anonymous: donor.is_anonymous,
-      is_featured: donor.is_featured,
+      name: sponsor.name,
+      amount: sponsor.amount || '',
+      message: sponsor.message || '',
+      is_anonymous: sponsor.is_anonymous,
+      is_featured: sponsor.is_featured,
     });
   };
 
@@ -1559,8 +1559,8 @@ const DonorsTab = ({ donors, onDelete, onUpdate, onCreate, editingItem, setEditi
   return (
     <div className="admin-tab-content">
       <div className="admin-tab-header">
-        <h2>Donors ({donors.length})</h2>
-        <button onClick={handleCreate} className="btn btn-primary">Add Donor</button>
+        <h2>Sponsors ({sponsors.length})</h2>
+        <button onClick={handleCreate} className="btn btn-primary">Add Sponsor</button>
       </div>
       <div className="admin-table-wrapper">
         <table className="admin-table">
@@ -1583,7 +1583,7 @@ const DonorsTab = ({ donors, onDelete, onUpdate, onCreate, editingItem, setEditi
                     type="text"
                     value={formData.name || ''}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    placeholder="Donor Name"
+                    placeholder="Sponsor Name"
                   />
                 </td>
                 <td>
@@ -1624,9 +1624,9 @@ const DonorsTab = ({ donors, onDelete, onUpdate, onCreate, editingItem, setEditi
                 </td>
               </tr>
             )}
-            {donors.map(donor => (
-              <tr key={donor.id}>
-                {editingItem === donor.id ? (
+            {sponsors.map(sponsor => (
+              <tr key={sponsor.id}>
+                {editingItem === sponsor.id ? (
                   <>
                     <td>
                       <input
@@ -1664,23 +1664,23 @@ const DonorsTab = ({ donors, onDelete, onUpdate, onCreate, editingItem, setEditi
                         onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
                       />
                     </td>
-                    <td>{formatDate(donor.created_at)}</td>
+                    <td>{formatDate(sponsor.created_at)}</td>
                     <td>
-                      <button onClick={() => handleSave(donor.id)} className="btn btn-sm">Save</button>
+                      <button onClick={() => handleSave(sponsor.id)} className="btn btn-sm">Save</button>
                       <button onClick={() => setEditingItem(null)} className="btn btn-sm btn-outline">Cancel</button>
                     </td>
                   </>
                 ) : (
                   <>
-                    <td>{donor.is_anonymous ? 'Anonymous' : donor.name}</td>
-                    <td>{donor.amount ? `$${parseFloat(donor.amount).toFixed(2)}` : 'N/A'}</td>
-                    <td className="message-cell">{donor.message || 'N/A'}</td>
-                    <td>{donor.is_anonymous ? 'Yes' : 'No'}</td>
-                    <td>{donor.is_featured ? 'Yes' : 'No'}</td>
-                    <td>{formatDate(donor.created_at)}</td>
+                    <td>{sponsor.is_anonymous ? 'Anonymous' : sponsor.name}</td>
+                    <td>{sponsor.amount ? `$${parseFloat(sponsor.amount).toFixed(2)}` : 'N/A'}</td>
+                    <td className="message-cell">{sponsor.message || 'N/A'}</td>
+                    <td>{sponsor.is_anonymous ? 'Yes' : 'No'}</td>
+                    <td>{sponsor.is_featured ? 'Yes' : 'No'}</td>
+                    <td>{formatDate(sponsor.created_at)}</td>
                     <td>
-                      <button onClick={() => handleEdit(donor)} className="btn btn-sm">Edit</button>
-                      <button onClick={() => onDelete(donor.id)} className="btn btn-sm btn-danger">Delete</button>
+                      <button onClick={() => handleEdit(sponsor)} className="btn btn-sm">Edit</button>
+                      <button onClick={() => onDelete(sponsor.id)} className="btn btn-sm btn-danger">Delete</button>
                     </td>
                   </>
                 )}
