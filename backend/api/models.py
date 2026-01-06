@@ -12,6 +12,7 @@ class SiteSettings(models.Model):
     background_image = models.ImageField(upload_to='backgrounds/', null=True, blank=True)
     hero_title = models.CharField(max_length=200, default="Your Journey to Recovery Starts Here")
     hero_subtitle = models.TextField(default="Compassionate care for lasting recovery")
+    mission = models.TextField(default="Our mission is to provide compassionate, evidence-based recovery services that empower individuals to overcome addiction and build a foundation for lasting sobriety.", help_text="Organization mission statement")
     about_content = models.TextField(default="2nd Chance Recovery is dedicated to helping individuals overcome addiction and build a foundation for lasting recovery.")
     contact_email = models.EmailField(default="info@2ndchancerecovery.com")
     contact_phone = models.CharField(max_length=20, default="(555) 123-4567")

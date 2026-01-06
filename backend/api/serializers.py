@@ -48,7 +48,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         model = SiteSettings
         fields = ['site_name', 'primary_color', 'secondary_color', 'accent_color', 
                   'background_color', 'background_image', 'hero_title', 'hero_subtitle',
-                  'about_content', 'contact_email', 'contact_phone', 'address',
+                  'mission', 'about_content', 'contact_email', 'contact_phone', 'address',
                   'facebook_url', 'instagram_url', 'twitter_url', 'linkedin_url', 
                   'youtube_url', 'tiktok_url']
         extra_kwargs = {

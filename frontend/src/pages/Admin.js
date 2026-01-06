@@ -297,7 +297,6 @@ const Admin = () => {
             <h1>Admin Panel</h1>
           </div>
           <div className="admin-header-actions">
-            <span>Welcome, {currentUser?.email}</span>
             <button onClick={handleLogout} className="btn btn-outline">Logout</button>
           </div>
         </div>
@@ -1057,6 +1056,9 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
             <strong>Hero Subtitle:</strong> {settings.hero_subtitle}
           </div>
           <div className="setting-item">
+            <strong>Mission:</strong> {settings.mission || 'Not set'}
+          </div>
+          <div className="setting-item">
             <strong>About Content:</strong> {settings.about_content}
           </div>
           <div className="setting-item">
@@ -1251,6 +1253,15 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
             value={formData.hero_subtitle}
             onChange={(e) => setFormData({...formData, hero_subtitle: e.target.value})}
             rows="2"
+          />
+        </div>
+        <div className="form-group">
+          <label>Mission</label>
+          <textarea
+            value={formData.mission || ''}
+            onChange={(e) => setFormData({...formData, mission: e.target.value})}
+            rows="5"
+            placeholder="Enter your organization's mission statement"
           />
         </div>
         <div className="form-group">
