@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSettings } from '../contexts/SettingsContext';
-import logoImage from '../assets/logo.jpg';
+import logoImage from '../assets/logo.png';
 import './Navbar.css';
 
 const Navbar = () => {
