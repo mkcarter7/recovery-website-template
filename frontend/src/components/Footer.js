@@ -98,7 +98,6 @@ const Footer = () => {
         
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} {settings.site_name}. All rights reserved.</p>
-          <p className="footer-credit">Website by <a href="https://1rockstarsocial.com" target="_blank" rel="noopener noreferrer" className="rockstar-social">RockStar Social</a></p>
         </div>
       </div>
     </footer>
