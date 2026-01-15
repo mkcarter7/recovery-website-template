@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #000000;
+  background-color: #090401;
   color: #FFFFFF;
   padding: 1rem 0;
   position: sticky;
@@ -55,7 +55,7 @@
 
 .navbar-menu li a:hover,
 .navbar-menu li a.active {
-  color: #DC143C;
+  color: #91B9C1;
 }
 
 .navbar-menu li a.active::after {
@@ -65,11 +65,11 @@
   left: 0;
   right: 0;
   height: 2px;
-  background-color: #DC143C;
+  background-color: #91B9C1;
 }
 
 .navbar-signin {
-  background-color: #DC143C;
+  background-color: #91B9C1;
   color: #FFFFFF !important;
   padding: 0.5rem 1rem;
   border-radius: 5px;
@@ -78,7 +78,7 @@
 }
 
 .navbar-signin:hover {
-  background-color: #B01030;
+  background-color: #6A8A92;
   color: #FFFFFF !important;
   transform: translateY(-2px);
 }
@@ -132,7 +132,7 @@
     top: 100%;
     left: 0;
     right: 0;
-    background-color: #000000;
+    background-color: #090401;
     flex-direction: column;
     padding: 0;
     gap: 0;
@@ -165,7 +165,7 @@
   }
   
   .navbar-menu li a.active {
-    background-color: rgba(220, 20, 60, 0.1);
+    background-color: rgba(145, 185, 193, 0.1);
   }
   
   .navbar-signin {

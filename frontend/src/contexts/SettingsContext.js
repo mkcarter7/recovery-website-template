@@ -15,10 +15,10 @@ export const useSettings = () => {
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState({
     site_name: 'Recovery',
-    primary_color: '#000000',
-    secondary_color: '#808080',
-    accent_color: '#DC143C',
-    background_color: '#FFFFFF',
+    primary_color: '#91B9C1',
+    secondary_color: '#C19569',
+    accent_color: '#91B9C1',
+    background_color: '#D8DDE1',
     hero_title: 'Your Journey to Recovery Starts Here',
     hero_subtitle: 'Compassionate care for lasting recovery',
     about_content: '',
@@ -36,10 +36,10 @@ export const SettingsProvider = ({ children }) => {
 
   const applyTheme = useCallback((settings) => {
     const root = document.documentElement;
-    root.style.setProperty('--primary-color', settings.primary_color || '#000000');
-    root.style.setProperty('--secondary-color', settings.secondary_color || '#808080');
-    root.style.setProperty('--accent-color', settings.accent_color || '#DC143C');
-    root.style.setProperty('--background-color', settings.background_color || '#FFFFFF');
+    root.style.setProperty('--primary-color', settings.primary_color || '#91B9C1');
+    root.style.setProperty('--secondary-color', settings.secondary_color || '#C19569');
+    root.style.setProperty('--accent-color', settings.accent_color || '#91B9C1');
+    root.style.setProperty('--background-color', settings.background_color || '#D8DDE1');
   }, []);
 
   const fetchSettings = useCallback(async () => {

@@ -1,5 +1,5 @@
 .footer {
-  background-color: #000000;
+  background-color: #090401;
   color: #FFFFFF;
   padding: 3rem 0 1rem;
   margin-top: auto;
@@ -15,7 +15,7 @@
 .footer-section h3,
 .footer-section h4 {
   margin-bottom: 1rem;
-  color: #DC143C;
+  color: #91B9C1;
 }
 
 .footer-logo-container {
@@ -51,7 +51,7 @@
 }
 
 .footer-section ul li a:hover {
-  color: #DC143C;
+  color: #91B9C1;
 }
 
 .social-media-links {
@@ -75,8 +75,8 @@
 }
 
 .social-media-links a:hover {
-  color: #DC143C;
-  background-color: rgba(220, 20, 60, 0.2);
+  color: #91B9C1;
+  background-color: rgba(145, 185, 193, 0.2);
   transform: translateY(-2px);
 }
 
@@ -102,7 +102,7 @@
 }
 
 .rockstar-social {
-  color: #DC143C;
+  color: #91B9C1;
   font-weight: 600;
   transition: color 0.3s ease;
 }

@@ -1150,7 +1150,7 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
             type="text"
             value={formData.primary_color}
             onChange={(e) => setFormData({...formData, primary_color: e.target.value})}
-            placeholder="#000000"
+            placeholder="#91B9C1"
           />
         </div>
         <div className="form-group">
@@ -1168,7 +1168,7 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
             type="text"
             value={formData.accent_color}
             onChange={(e) => setFormData({...formData, accent_color: e.target.value})}
-            placeholder="#DC143C"
+            placeholder="#91B9C1"
           />
         </div>
         <div className="form-group">
@@ -1219,7 +1219,7 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
                   if (errorMsg) errorMsg.style.display = 'block';
                 }}
               />
-              <span style={{ display: 'none', color: '#dc143c', fontSize: '0.9rem' }}>Failed to load image preview</span>
+              <span style={{ display: 'none', color: '#91B9C1', fontSize: '0.9rem' }}>Failed to load image preview</span>
               <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '5px' }}>
                 {formData.background_image instanceof File ? formData.background_image.name : 'Current image'}
               </p>
