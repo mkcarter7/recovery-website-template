@@ -19,7 +19,7 @@ const About = () => {
         <div className="container">
           <div className="about-text">
             <p className="about-description" style={{ whiteSpace: 'pre-line' }}>
-              {settings.about_content || '2nd Chance Recovery is dedicated to helping individuals overcome addiction and build a foundation for lasting recovery. Our compassionate team provides comprehensive support and evidence-based treatment programs tailored to each individual\'s unique needs.'}
+              {settings.about_content || 'Recovery is dedicated to helping individuals overcome addiction and build a foundation for lasting recovery. Our compassionate team provides comprehensive support and evidence-based treatment programs tailored to each individual\'s unique needs.'}
             </p>
           </div>
 

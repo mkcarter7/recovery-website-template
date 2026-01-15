@@ -97,7 +97,7 @@ const HousingApplication = () => {
         <div className="container">
           <h1 style={{ color: '#FFFFFF' }}>Housing Application</h1>
           <p className="application-subtitle">
-            Apply for housing at 2nd Chance Recovery. Please fill out all required fields.
+            Apply for housing at Recovery. Please fill out all required fields.
           </p>
         </div>
       </section>

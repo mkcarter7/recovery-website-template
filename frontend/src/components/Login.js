@@ -65,7 +65,7 @@ const Login = () => {
     <div className="login-container">
       <div className="login-box">
         <h2>Admin Login</h2>
-        <p className="login-subtitle">2nd Chance Recovery</p>
+        <p className="login-subtitle">Recovery</p>
         <p className="login-note">Administrator access only. Sign in with your Google account.</p>
         
         {error && <div className="login-error">{error}</div>}

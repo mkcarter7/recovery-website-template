@@ -14,7 +14,7 @@ export const useSettings = () => {
 
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState({
-    site_name: '2nd Chance Recovery',
+    site_name: 'Recovery',
     primary_color: '#000000',
     secondary_color: '#808080',
     accent_color: '#DC143C',

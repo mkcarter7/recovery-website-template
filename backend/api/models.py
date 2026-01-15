@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class SiteSettings(models.Model):
     """Site-wide settings that can be updated by admin"""
-    site_name = models.CharField(max_length=200, default="2nd Chance Recovery")
+    site_name = models.CharField(max_length=200, default="Recovery")
     primary_color = models.CharField(max_length=7, default="#000000", help_text="Hex color code (Black)")
     secondary_color = models.CharField(max_length=7, default="#808080", help_text="Hex color code (Gray)")
     accent_color = models.CharField(max_length=7, default="#DC143C", help_text="Hex color code (Red)")
@@ -13,7 +13,7 @@ class SiteSettings(models.Model):
     hero_title = models.CharField(max_length=200, default="Your Journey to Recovery Starts Here")
     hero_subtitle = models.TextField(default="Compassionate care for lasting recovery")
     mission = models.TextField(default="Our mission is to provide compassionate, evidence-based recovery services that empower individuals to overcome addiction and build a foundation for lasting sobriety.", help_text="Organization mission statement")
-    about_content = models.TextField(default="2nd Chance Recovery is dedicated to helping individuals overcome addiction and build a foundation for lasting recovery.")
+    about_content = models.TextField(default="Recovery is dedicated to helping individuals overcome addiction and build a foundation for lasting recovery.")
     contact_email = models.EmailField(default="info@2ndchancerecovery.com")
     contact_phone = models.CharField(max_length=20, default="(555) 123-4567")
     address = models.TextField(default="123 Recovery Street, City, State 12345")

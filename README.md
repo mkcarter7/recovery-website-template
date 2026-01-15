@@ -1,6 +1,6 @@
-# 2nd Chance Recovery Website
+# Recovery Website
 
-Website for 2nd Chance Recovery - a drug and alcohol recovery center.
+Website for Recovery - a drug and alcohol recovery center.
 
 ## Tech Stack
 

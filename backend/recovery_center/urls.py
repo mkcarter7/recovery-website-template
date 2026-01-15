@@ -15,7 +15,7 @@ import mimetypes
 def api_root(request):
     """Root endpoint"""
     return JsonResponse({
-        'message': '2nd Chance Recovery API'
+        'message': 'Recovery API'
     })
 
 @require_http_methods(["GET"])
