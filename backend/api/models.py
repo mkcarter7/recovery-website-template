@@ -5,10 +5,11 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class SiteSettings(models.Model):
     """Site-wide settings that can be updated by admin"""
     site_name = models.CharField(max_length=200, default="Recovery")
-    primary_color = models.CharField(max_length=7, default="#000000", help_text="Hex color code (Black)")
-    secondary_color = models.CharField(max_length=7, default="#808080", help_text="Hex color code (Gray)")
-    accent_color = models.CharField(max_length=7, default="#DC143C", help_text="Hex color code (Red)")
-    background_color = models.CharField(max_length=7, default="#FFFFFF", help_text="Hex color code (White)")
+    primary_color = models.CharField(max_length=7, default="#91B9C1", help_text="Hex color code (Light Blue-Teal)")
+    secondary_color = models.CharField(max_length=7, default="#C19569", help_text="Hex color code (Tan/Brown)")
+    accent_color = models.CharField(max_length=7, default="#91B9C1", help_text="Hex color code (Light Blue-Teal)")
+    background_color = models.CharField(max_length=7, default="#D8DDE1", help_text="Hex color code (Light Gray)")
+    empty_state_color = models.CharField(max_length=7, default="#C19569", help_text="Hex color code for empty state messages (e.g., 'No programs available')")
     background_image = models.ImageField(upload_to='backgrounds/', null=True, blank=True)
     hero_title = models.CharField(max_length=200, default="Your Journey to Recovery Starts Here")
     hero_subtitle = models.TextField(default="Compassionate care for lasting recovery")

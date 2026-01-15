@@ -13,7 +13,7 @@ const Footer = () => {
                          settings.youtube_url || settings.tiktok_url;
 
   return (
-    <footer className="footer" style={{ backgroundColor: settings.primary_color }}>
+    <footer className="footer" style={{ backgroundColor: '#090401' }}>
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
@@ -98,6 +98,11 @@ const Footer = () => {
         
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} {settings.site_name}. All rights reserved.</p>
+          <p>
+            <a href="https://1rockstarsocial.com" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>
+              RockStar Social
+            </a>
+          </p>
         </div>
       </div>
     </footer>

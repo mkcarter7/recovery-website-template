@@ -47,7 +47,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
         fields = ['site_name', 'primary_color', 'secondary_color', 'accent_color', 
-                  'background_color', 'background_image', 'hero_title', 'hero_subtitle',
+                  'background_color', 'empty_state_color', 'background_image', 'hero_title', 'hero_subtitle',
                   'mission', 'about_content', 'contact_email', 'contact_phone', 'address',
                   'facebook_url', 'instagram_url', 'twitter_url', 'linkedin_url', 
                   'youtube_url', 'tiktok_url']

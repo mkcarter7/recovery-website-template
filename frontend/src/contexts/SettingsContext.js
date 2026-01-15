@@ -19,6 +19,7 @@ export const SettingsProvider = ({ children }) => {
     secondary_color: '#C19569',
     accent_color: '#91B9C1',
     background_color: '#D8DDE1',
+    empty_state_color: '#C19569',
     hero_title: 'Your Journey to Recovery Starts Here',
     hero_subtitle: 'Compassionate care for lasting recovery',
     about_content: '',
@@ -40,6 +41,7 @@ export const SettingsProvider = ({ children }) => {
     root.style.setProperty('--secondary-color', settings.secondary_color || '#C19569');
     root.style.setProperty('--accent-color', settings.accent_color || '#91B9C1');
     root.style.setProperty('--background-color', settings.background_color || '#D8DDE1');
+    root.style.setProperty('--empty-state-color', settings.empty_state_color || settings.secondary_color || '#C19569');
   }, []);
 
   const fetchSettings = useCallback(async () => {

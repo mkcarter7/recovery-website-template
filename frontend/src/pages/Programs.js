@@ -35,7 +35,7 @@ const Programs = () => {
           <h1 className="page-title" style={{ color: settings.primary_color }}>
             Programs & Housing
           </h1>
-          <p className="page-subtitle" style={{ color: settings.secondary_color }}>
+          <p className="page-subtitle" style={{ color: settings.empty_state_color || settings.secondary_color }}>
             Comprehensive recovery programs and safe housing options
           </p>
         </div>
@@ -80,7 +80,7 @@ const Programs = () => {
               ))}
             </div>
           ) : (
-            <p style={{ textAlign: 'center', color: settings.secondary_color }}>
+            <p style={{ textAlign: 'center', color: settings.empty_state_color || settings.secondary_color }}>
               No programs available at this time.
             </p>
           )}
@@ -129,7 +129,7 @@ const Programs = () => {
               ))}
             </div>
           ) : (
-            <p style={{ textAlign: 'center', color: settings.secondary_color }}>
+            <p style={{ textAlign: 'center', color: settings.empty_state_color || settings.secondary_color }}>
               No housing options available at this time.
             </p>
           )}

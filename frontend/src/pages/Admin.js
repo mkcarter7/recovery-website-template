@@ -1050,6 +1050,11 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
             {settings.background_color}
           </div>
           <div className="setting-item">
+            <strong>Empty State Color:</strong> 
+            <span className="color-box" style={{ backgroundColor: settings.empty_state_color || settings.secondary_color }}></span>
+            {settings.empty_state_color || settings.secondary_color}
+          </div>
+          <div className="setting-item">
             <strong>Hero Title:</strong> {settings.hero_title}
           </div>
           <div className="setting-item">
@@ -1145,40 +1150,64 @@ const SettingsTab = ({ settings, onSave, editing, setEditing }) => {
           />
         </div>
         <div className="form-group">
-          <label>Primary Color (Hex)</label>
+          <label>Primary Color (Hex) - Headings, Buttons & Links</label>
           <input
             type="text"
             value={formData.primary_color}
             onChange={(e) => setFormData({...formData, primary_color: e.target.value})}
             placeholder="#91B9C1"
           />
+          <small style={{ color: '#666', fontSize: '0.85rem', display: 'block', marginTop: '0.25rem' }}>
+            Used for: Page headings, section titles, primary buttons, links, and footer headings
+          </small>
         </div>
         <div className="form-group">
-          <label>Secondary Color (Hex)</label>
+          <label>Secondary Color (Hex) - Subtitles & Secondary Text</label>
           <input
             type="text"
             value={formData.secondary_color}
             onChange={(e) => setFormData({...formData, secondary_color: e.target.value})}
-            placeholder="#808080"
+            placeholder="#C19569"
           />
+          <small style={{ color: '#666', fontSize: '0.85rem', display: 'block', marginTop: '0.25rem' }}>
+            Used for: Subtitle text, secondary text elements, and loading messages
+          </small>
         </div>
         <div className="form-group">
-          <label>Accent Color (Hex)</label>
+          <label>Accent Color (Hex) - CTA Sections & Highlights</label>
           <input
             type="text"
             value={formData.accent_color}
             onChange={(e) => setFormData({...formData, accent_color: e.target.value})}
-            placeholder="#91B9C1"
+            placeholder="#C19569"
           />
+          <small style={{ color: '#666', fontSize: '0.85rem', display: 'block', marginTop: '0.25rem' }}>
+            Used for: Call-to-action section backgrounds, sponsor highlights, and accent buttons
+          </small>
         </div>
         <div className="form-group">
-          <label>Background Color (Hex)</label>
+          <label>Background Color (Hex) - Page & Section Backgrounds</label>
           <input
             type="text"
             value={formData.background_color}
             onChange={(e) => setFormData({...formData, background_color: e.target.value})}
-            placeholder="#FFFFFF"
+            placeholder="#D8DDE1"
           />
+          <small style={{ color: '#666', fontSize: '0.85rem', display: 'block', marginTop: '0.25rem' }}>
+            Used for: Page backgrounds, hero sections (when no background image), and content sections
+          </small>
+        </div>
+        <div className="form-group">
+          <label>Empty State Color (Hex) - "No Programs Available" Messages</label>
+          <input
+            type="text"
+            value={formData.empty_state_color}
+            onChange={(e) => setFormData({...formData, empty_state_color: e.target.value})}
+            placeholder="#C19569"
+          />
+          <small style={{ color: '#666', fontSize: '0.85rem', display: 'block', marginTop: '0.25rem' }}>
+            Used for: "Comprehensive recovery programs and safe housing options" subtitle, "No programs available at this time", and "No housing options available at this time" messages
+          </small>
         </div>
         <div className="form-group">
           <label>Background Image</label>

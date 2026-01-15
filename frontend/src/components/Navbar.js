@@ -33,7 +33,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar" style={{ backgroundColor: settings.primary_color }}>
+    <nav className="navbar" style={{ backgroundColor: '#090401' }}>
       <div className="container">
         <div className="navbar-content">
           <Link to="/" className="navbar-logo">
